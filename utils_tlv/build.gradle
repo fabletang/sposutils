@@ -21,6 +21,7 @@ dependencies {
     )
 }
 
+compileJava.dependsOn 'copyConf'
 uploadArchives.dependsOn 'copyLibs'
 uploadArchives {
     repositories {

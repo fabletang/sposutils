@@ -12,16 +12,8 @@ javadoc {
     options.charSet= 'UTF-8'
 }
 defaultTasks 'build'
-task copyConf << {
-    copy {
-        from 'src/main/java/'
-        into 'build/classes/main'
-        include '**/*.json'
-        include '**/*.txt'
-    }
-    }
 
-compileJava.dependsOn 'copyConf'
+/*compileJava.dependsOn 'copyConf'*/
 /*build.dependsOn 'copyConf'*/
 
 repositories {
@@ -30,6 +22,14 @@ repositories {
 test {
     systemProperties 'property': 'value'
 }
+task copyConf << {
+    copy {
+        from 'src/main/java/'
+        into 'build/classes/main'
+        include '**/*.json'
+        include '**/*.txt'
+    }
+ }
 task copyLibs << {
     copy {
         from 'libs'

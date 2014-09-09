@@ -1,7 +1,8 @@
 apply plugin: 'java'
 sourceCompatibility = 1.6
 version = '1.1'
-allprojects {
+/*allprojects {*/
+subprojects {
     tasks.withType(JavaCompile) {
         options.incremental = true
     }
@@ -10,7 +11,7 @@ javadoc {
     options.encoding = 'UTF-8'
     options.charSet= 'UTF-8'
 }
-defaultTasks 'copyConf','build'
+defaultTasks 'build'
 task copyConf << {
     copy {
         from 'src/main/java/'
@@ -19,23 +20,33 @@ task copyConf << {
         include '**/*.txt'
     }
     }
-dependencies {
-    /*compile fileTree(dir: 'libs', include: '*.jar') */
-    /*testCompile group: 'junit', name: 'junit', version: '4.+'*/
-}
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs 'repos'
-       }
-    }
-}
+
+compileJava.dependsOn 'copyConf'
+/*build.dependsOn 'copyConf'*/
+
 repositories {
     mavenCentral()
 }
 test {
     systemProperties 'property': 'value'
 }
+task copyLibs << {
+    copy {
+        from 'libs'
+        into '../repos'
+        include '*.jar'
+    }
+    }
+
+/*uploadArchives.dependsOn 'copyLibs'*/
+/*upload.dependsOn 'copyLibs'*/
+/*uploadArchives { }*/
+    /*repositories {*/
+       /*flatDir {*/
+           /*dirs '../repos'*/
+       /*}*/
+    /*}*/
+
 }
 
 

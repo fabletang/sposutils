@@ -1,6 +1,6 @@
 package com.pax.spos.utils.tlv.model;
 
-import com.pax.spos.utils.tlv.ByteStringHex;
+import com.pax.spos.utils.ByteStringHex;
 
 import java.util.Arrays;
 import java.util.List;

@@ -19,4 +19,12 @@ dependencies {
          project(':utils_comm')
     )
 }
-
+compileJava.dependsOn 'copyConf'
+uploadArchives.dependsOn 'copyLibs'
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs '../repos'
+       }
+    }
+}

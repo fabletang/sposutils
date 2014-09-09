@@ -1,6 +1,6 @@
 apply plugin: 'java'
 sourceCompatibility = 1.6
-version = '1.1'
+version = '1.2'
 
 repositories {
     mavenCentral()
@@ -10,6 +10,7 @@ jar {
         attributes 'Implementation-Title': 'spos tlv', 'Implementation-Version': version
     }
 }
+/*tasks.withType(compile) { compileTask -> compileTask.dependsOn copyConf }*/
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar') 
@@ -20,3 +21,11 @@ dependencies {
     )
 }
 
+uploadArchives.dependsOn 'copyLibs'
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs '../repos'
+       }
+    }
+}

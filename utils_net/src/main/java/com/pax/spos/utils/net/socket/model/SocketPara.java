@@ -1,4 +1,4 @@
-package com.pax.spos.utils.net.model;
+package com.pax.spos.utils.net.socket.model;
 
 
 /**
@@ -7,7 +7,7 @@ package com.pax.spos.utils.net.model;
  * headLenNum_in 开始几个byte 作为长度
  * lenType_in 长度类型 HEX BCD ASC
  */
-public class sockBytesPara {
+public class SocketPara {
     private String host;
     private int port;
     private int timeout_c;

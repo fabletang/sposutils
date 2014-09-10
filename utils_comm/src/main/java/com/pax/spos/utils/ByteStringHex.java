@@ -258,6 +258,21 @@ public class ByteStringHex {
     }
 
     /**
+     * int 转换为 byte[num] num为指定长度 num>0
+     *
+     * @param i
+     * @return
+     */
+    public static byte[] int2FixBytes(int i,int bytesNum) {
+        if (bytesNum<1)return null;
+        byte[] tmp = int2BytesN(i);
+        if (bytesNum<tmp.length) return null;
+        byte[] result = new byte[bytesNum];
+        System.arraycopy(tmp,0,result,bytesNum-tmp.length,tmp.length);
+        return result;
+    }
+
+    /**
      * 无符号int 转换为 byte[n] n= 1-4
      *
      * @param i int 待转换的int32

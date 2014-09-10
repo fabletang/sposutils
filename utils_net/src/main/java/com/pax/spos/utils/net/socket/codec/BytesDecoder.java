@@ -43,7 +43,8 @@ public class BytesDecoder extends CumulativeProtocolDecoder {
         byte[] headBytes= new byte[headLen];
         System.arraycopy(buf,0,headBytes,0,headLen-1);
         //todo len by type
-        int len= ByteStringHex.bytes2Int(headBytes);
+//        int len= ByteStringHex.bytes2Int(headBytes);
+        int len= SocketUtil.getContentLen(buf,!isServer);
         SocketBytes socketBytes=new SocketBytes();
         Date date=new Date();
         if (len==bufLen-headLen){

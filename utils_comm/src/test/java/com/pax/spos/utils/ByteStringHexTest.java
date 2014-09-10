@@ -3,6 +3,7 @@ package com.pax.spos.utils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ByteStringHexTest {
 
@@ -30,6 +31,9 @@ public class ByteStringHexTest {
         byte[] test = {(byte) 0x02, (byte) 0x1a};
         String str = ByteStringHex.bcd2Str(test);
         assertEquals("2110", str);
+         byte[] test2 = {(byte) 0x03, (byte) 0x21};
+        str = ByteStringHex.bcd2Str(test2);
+        assertEquals("321", str);
     }
 
     @Test
@@ -128,5 +132,68 @@ public class ByteStringHexTest {
         i = 16;
         str = ByteStringHex.bytes2HexStr(ByteStringHex.int2BytesN(i));
         assertEquals("10", str);
+    }
+    @Test
+    public void testInt2FixBcd() throws Exception{
+       int i=12345678;
+       byte[] bcd=ByteStringHex.int2FixBcd(i,4);
+//        System.out.println("--testInt2FixBcd "+ByteStringHex.bytes2HexStr(bcd));
+        assertEquals(4, bcd.length);
+       assertEquals(0x12, bcd[0]);
+         bcd=ByteStringHex.int2FixBcd(i,5);
+//        System.out.println("--testInt2FixBcd "+ByteStringHex.bytes2HexStr(bcd));
+        assertEquals(5, bcd.length);
+        assertEquals(0x12, bcd[1]);
+
+    }
+    @Test
+    public void testBcd2Int() throws Exception{
+        String hexStr="1234";
+        byte[] bcd=ByteStringHex.hexStr2Bytes(hexStr);
+        int i=ByteStringHex.bcd2Int(bcd);
+        assertEquals(1234,i);
+
+        hexStr="12345";
+        bcd=ByteStringHex.hexStr2Bytes(hexStr);
+//        System.out.println("--testBcd2Int "+ByteStringHex.bytes2HexStr(bcd));
+        i=ByteStringHex.bcd2Int(bcd);
+        assertEquals(12345,i);
+
+        hexStr="1234567";
+        bcd=ByteStringHex.hexStr2Bytes(hexStr);
+//        System.out.println("--testBcd2Int "+ByteStringHex.bytes2HexStr(bcd));
+        i=ByteStringHex.bcd2Int(bcd);
+        assertEquals(1234567,i);
+        hexStr="12345678";
+        bcd=ByteStringHex.hexStr2Bytes(hexStr);
+//        System.out.println("--testBcd2Int "+ByteStringHex.bytes2HexStr(bcd));
+        i=ByteStringHex.bcd2Int(bcd);
+        assertEquals(12345678,i);
+    }
+    @Test
+    public void testInt2Asc() throws Exception{
+        int i=1234;
+        byte[] asc=ByteStringHex.int2Asc(i);
+        assertNotNull(asc);
+        assertEquals(0x31,asc[0]);
+        assertEquals(0x34,asc[3]);
+        i=-1234;
+         asc=ByteStringHex.int2Asc(i);
+        assertNotNull(asc);
+        assertEquals(0x2D,asc[0]);
+        assertEquals(0x31,asc[1]);
+        assertEquals(0x34,asc[4]);
+    }
+    @Test
+    public void testAsc2Int() throws Exception{
+      String hexStr="31 32 33 34";
+      byte[] asc=ByteStringHex.hexStr2Bytes(hexStr);
+      int i=ByteStringHex.asc2Int(asc);
+       assertEquals(1234,i);
+
+        hexStr="2D 31 32 33 34";
+        asc=ByteStringHex.hexStr2Bytes(hexStr);
+        i=ByteStringHex.asc2Int(asc);
+        assertEquals(-1234,i);
     }
 }

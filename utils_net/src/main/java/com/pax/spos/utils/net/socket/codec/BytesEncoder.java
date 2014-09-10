@@ -50,7 +50,8 @@ public class BytesEncoder implements ProtocolEncoder {
             int len= headLen + bytesContentLen;
             if (len<1)return;
             bytesOut=new byte[len];
-            byte[] lenBytes= ByteStringHex.int2FixBytes(bytesContentLen,headLen);
+//            byte[] lenBytes= ByteStringHex.int2FixBytes(bytesContentLen,headLen);
+            byte[] lenBytes= SocketUtil.buildHeadBytes(bytesContentLen,isServer);
             if (lenBytes.length<1)return;
             System.arraycopy(lenBytes,0,bytesOut,0,lenBytes.length);
             System.arraycopy(socketBytes.getBytesContent(),0,bytesOut,lenBytes.length,bytesContentLen);

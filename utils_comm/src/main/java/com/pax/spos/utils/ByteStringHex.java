@@ -313,7 +313,7 @@ public class ByteStringHex {
         }
         byte[] bytesTemp = new byte[4];
         if (len < 4) {
-            System.arraycopy(bytes, 0, bytesTemp, len - 2, len);
+            System.arraycopy(bytes, 0, bytesTemp, 4-len, len);
         } else {
             bytesTemp = bytes;
         }
@@ -395,6 +395,78 @@ public class ByteStringHex {
     public static final Object hexStr2Object(String hex)
             throws IOException, ClassNotFoundException {
         return bytes2Object(hexStr2Bytes(hex));
+    }
+
+    public static int asc2Int (byte[] asc){
+       return Integer.parseInt(new String(asc));
+    }
+
+    public static byte[] int2Asc (int i){
+        return Integer.valueOf(i).toString().getBytes();
+    }
+    public static byte[] int2FixAsc (int i,int len){
+        byte[] tmp= Integer.valueOf(i).toString().getBytes();
+
+        int tmpLen=tmp.length;
+        if (tmpLen<1) return null;
+        byte[] dest=new byte[len];
+        if (len>=tmpLen){
+            System.arraycopy(tmp,0,dest,len-tmpLen,tmpLen);
+        }else{
+            System.arraycopy(tmp,0,dest,0,len);
+        }
+        return dest;
+    }
+    /**
+     * bcd 转 int
+     * @param bytes 高位非0x00的byte 最多4位
+     * @return -1 表示失败
+     */
+    public static int bcd2Int(byte[] bytes) {
+        StringBuffer temp = new StringBuffer(bytes.length * 2);
+
+        for (int i = 0; i < bytes.length; i++) {
+            temp.append((byte) ((bytes[i] & 0xf0) >>> 4));
+            temp.append((byte) (bytes[i] & 0x0f));
+        }
+//        String str=bcd2Str(bytes);
+//        StringBuffer temp = new StringBuffer();
+        if (temp.length()<9){
+            return Integer.parseInt(temp.toString());
+        }
+        return -1;
+    }
+
+    /**
+     * int 转 bcd bytes
+     * @param i int 待转换的int32
+     * @return byte[] 不定长
+     */
+    public static byte[] int2Bcd (int i){
+       String stri=Integer.toString(i);
+//        System.out.println("stri="+stri);
+       return str2Bcd(stri);
+    }
+
+    /**
+     * int 转 指定长度的bcd bytes
+     * 如果指定长度<int长度， 高位优先，丢弃地位
+     * 如果指定长度>int长度   bcd bytes 高位补0x00;
+     * @param i int 待转换的int32, len>0
+     * @param len 指定 bcd byte长度
+     * @return byte[] 长度 len
+     */
+    public static byte[] int2FixBcd (int i,int len){
+        byte[] tmp=int2Bcd(i);
+        if (tmp==null||tmp.length<1||len<1) return null;
+        int tmpLen=tmp.length;
+        byte[] dest=new byte[len];
+        if (len>=tmpLen){
+           System.arraycopy(tmp,0,dest,len-tmpLen,tmpLen);
+        }else{
+            System.arraycopy(tmp,0,dest,0,len);
+        }
+        return dest;
     }
 
     /**

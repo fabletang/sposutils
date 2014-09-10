@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class TLVUtilsTest {
@@ -75,7 +76,8 @@ public class TLVUtilsTest {
     public void testBytes2NestedFlatTLVs() throws Exception {
 
 //        String hexStr= "E101000015C101010303010105E101020308C101020303027776";
-        String hexStr = "E10100001DC101010303010105E101020310C101020303027776C101030303020122";
+//        String hexStr = "E10100001DC101010303010105E101020310C101020303027776C101030303020122";
+        String hexStr = "E10100001DC101010303010105E101020310C101020303027776C101030303020122 C123456700";
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
 //        List<TLV> res=TLVUtils.bytes2TopNestedTLVs(test);
         List<TLV> res = TLVUtils.bytes2NestedFlatTLVs(test);
@@ -87,6 +89,31 @@ public class TLVUtilsTest {
         test=ByteStringHex.hexStr2Bytes(hexStr);
         res=TLVUtils.bytes2NestedFlatTLVs(test);
         System.out.println("testBytes2NestedFlatTLVs "+res3);
+        hexStr = "C1234567 00 E10100001DC101010303010105E101020310C101020303027776C101030303020122";
+        test=ByteStringHex.hexStr2Bytes(hexStr);
+        res=TLVUtils.bytes2NestedFlatTLVs(test);
+        assertEquals(5, res.size());
+
+        hexStr = "E101000022C101010303010105 C123456700 E101020310C101020303027776C101030303020122";
+        test=ByteStringHex.hexStr2Bytes(hexStr);
+        res=TLVUtils.bytes2NestedFlatTLVs(test);
+        assertEquals(5, res.size());
+
+        hexStr= "CF 00 00 00 02 A1 01 " +
+                "C2 01 02 03 01 01 " +
+                "E2 01 03 10 81 80 " +
+                "C2 01 04 05 4B 42 36 32 32 35 37 36 38 37 30 39 37 34 38 38 30 38 5E 48 55 41 4E 47 20 57 " +
+                "45 49 20 50 45 4E 47 20 20 20 20 20 20 20 20 20 20 20 5E 31 39 30 37 31 30 31 31 35 37 30 " +
+                "32 20 20 20 20 39 39 39 39 30 30 31 35 38 30 30 30 30 30 30 " +
+                "C2 01 05 05 20 36 32 32 35 37 36 38 37 30 39 37 34 38 38 30 38 3D 31 39 30 37 31 30 31 31 " +
+                "35 37 30 32 31 35 38 " +
+                "C2 01 06 05 01 02 " +
+                "C2 01 07 03 00 ";
+//        System.out.println(hexStr.trim().length()/2);
+//        System.out.println(ByteStringHex.hexStr2Bytes(hexStr).length);
+        test=ByteStringHex.hexStr2Bytes(hexStr);
+        res=TLVUtils.bytes2NestedFlatTLVs(test);
+        assertEquals(6, res.size());
 
     }
 

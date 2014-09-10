@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
  */
 public class TagJsonUtils {
     private static TagJsonUtils instance = null;
+    private TagJson tagJson;
 
     private TagJsonUtils() {
     }
@@ -27,6 +28,7 @@ public class TagJsonUtils {
     }
 
     public TagJson parseJson(String tagjsonPath) throws IOException {
+        if (tagJson!=null) return tagJson;
         if (tagjsonPath == null || tagjsonPath.length() < 6 || !tagjsonPath.endsWith(".json")) {
             return null;
         }
@@ -40,6 +42,7 @@ public class TagJsonUtils {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         Gson gson = new Gson();
         if (!br.ready()) return null;
-        return gson.fromJson(br, TagJson.class);
+        this.tagJson=gson.fromJson(br, TagJson.class);
+        return tagJson;
     }
 }

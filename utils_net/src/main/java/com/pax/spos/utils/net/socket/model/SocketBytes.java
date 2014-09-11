@@ -22,6 +22,10 @@ public class SocketBytes {
 //    private long timeinms;
     private Date createdDate;
 
+    public SocketBytes() {
+        this.createdDate = new Date();
+    }
+
     @Override
     public String toString() {
         return "socketBytes{" +
@@ -29,7 +33,7 @@ public class SocketBytes {
                 ", bytesLen=" + bytesLen +
                 ", bytesContent=" + Arrays.toString(bytesContent) +
                 ", bytesContent_HEX=" + ByteStringHex.bytes2HexStr(bytesContent) +
-                ", createdDate=" +new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(createdDate)+
+                ", createdDate=" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(createdDate) +
                 '}';
     }
 

@@ -1,6 +1,7 @@
 package com.pax.spos.utils.net.socket;
 
 import com.pax.spos.utils.ByteStringHex;
+import com.pax.spos.utils.net.socket.model.SocketBytes;
 import com.pax.spos.utils.net.socket.model.SocketPara;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by fable on 14-9-10.
  */
-public class SocketUtil {
+public class SocketClientUtil {
     public static SocketPara getSocketPara() throws IOException {
         return SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
     }
@@ -46,7 +47,7 @@ public class SocketUtil {
 
     }
 
-    public static int getContentLen (byte[] bytes,boolean isIn) throws IOException {
+    public static int getContentLen(byte[] bytes, boolean isIn) throws IOException {
         SocketPara socketPara = getSocketPara();
         if (socketPara == null) return 0;
         String lenType;
@@ -59,27 +60,47 @@ public class SocketUtil {
             lenType = socketPara.getLenType_out();
             headLen = socketPara.getHeadLenNum_out();
         }
-        byte[] tmp=new byte[headLen];
-        System.arraycopy(bytes,0,tmp,0,headLen);
+        byte[] tmp = new byte[headLen];
+        System.arraycopy(bytes, 0, tmp, 0, headLen);
         int dest;
         switch (lenType) {
             case "HEX": {
-               dest=ByteStringHex.bytes2Int(tmp);
+                dest = ByteStringHex.bytes2Int(tmp);
                 break;
             }
             case "BCD": {
-                dest=ByteStringHex.bcd2Int(tmp);
+                dest = ByteStringHex.bcd2Int(tmp);
                 break;
             }
             case "ASC": {
-                dest=ByteStringHex.asc2Int(tmp);
+                dest = ByteStringHex.asc2Int(tmp);
                 break;
             }
             default:
-                dest=ByteStringHex.bytes2Int(tmp);
+                dest = ByteStringHex.bytes2Int(tmp);
         }
 
         return dest;
     }
 
+    /**
+     * socket 短链接发送
+     * <p/>
+     * SocketBytes 字节流对象
+     * isFitSocketPara 是否复合socketPara.json 的规范,不符合将直接发送bytesConstent (byte[])
+     * bytesLen 字节流长度， 如果 isFitSocketPara==false，为字节流本身长度
+     * bytesContent 如果 isFitSocketPara==true, 为除去开始表示长度字符的字节流。
+     * createDate 为socketBytes对象产生的日期
+     *
+     * @param socketBytesSend 待发送的 SocketBytes 对象,
+     *                        isFitSocketPara(默认为false)/bytesContent (byte[])不能为空
+     * @return SocketBytes 对象, 先根据socketPara.json规范来解释byte[],
+     *                          符合的话剔除head,把内容放入bytesContent,
+     *                          长度不符合，setFixSocketPara(false), 把全部byte[]放入bytesContent
+     * @throws IOException
+     */
+    public static SocketBytes shortSend(SocketBytes socketBytesSend) throws IOException {
+        ShortClient shortClient = new ShortClient();
+        return shortClient.send(socketBytesSend);
+    }
 }

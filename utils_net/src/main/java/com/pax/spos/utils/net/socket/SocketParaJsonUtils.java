@@ -28,7 +28,9 @@ public class SocketParaJsonUtils {
     }
 
     public SocketPara parseJson(String socketParaJsonPath) throws IOException {
-        if (socketPara!=null){return socketPara;}
+        if (socketPara != null) {
+            return socketPara;
+        }
 
         if (socketParaJsonPath == null || socketParaJsonPath.length() < 6 || !socketParaJsonPath.endsWith(".json")) {
             return null;
@@ -37,7 +39,7 @@ public class SocketParaJsonUtils {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         Gson gson = new Gson();
         if (!br.ready()) return null;
-        this.socketPara=gson.fromJson(br, SocketPara.class);
+        this.socketPara = gson.fromJson(br, SocketPara.class);
         return socketPara;
     }
 }

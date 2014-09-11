@@ -246,10 +246,16 @@ public class TLVUtilsTest {
 
         tlv122 = new TLV("C1010303", "020122");
 
+        hexStr = "C1 23 45 67";
+        tag = ByteStringHex.hex8Str2int(hexStr);
+        value =null;
+        TLV tlv123 = new TLV(tag, value);
+
         TLVUtils.addSubTLV(tlv11, tlv1);
         TLVUtils.addSubTLV(tlv121, tlv12);
         TLVUtils.addSubTLV(tlv122, tlv12);
         TLVUtils.addSubTLV(tlv12, tlv1);
+        TLVUtils.addSubTLV(tlv123,tlv1);
 //        System.out.println("11 testTLV2Bytes tlv="+tlv1);
 
         res = TLVUtils.TLV2Bytes(tlv1);
@@ -259,11 +265,11 @@ public class TLVUtilsTest {
         tlvs.add(tlv);
         tlvs.add(tlv1);
         res = TLVUtils.TLVs2Bytes(tlvs);
-        //C101020303000105 E10100001DC101010303010105E101020310C101020303027776C101030303020122
-//        System.out.println("===========14 testTLV2Bytes res="+ByteStringHex.bytes2HexStr(res));
+        //C1010203 03000105 E1010000 1DC101010303010105E101020310C101020303027776C101030303020122
+        System.out.println("===========14 testTLV2Bytes res="+ByteStringHex.bytes2HexStr(res));
         assertEquals((byte) (0xC1), res[0]);
-        assertEquals((byte) (0x22), res[res.length - 1]);
-        assertEquals((byte) (0x1D), res[12]);
-        assertEquals((byte) (0x10), res[25]);
+        assertEquals((byte) (0x22), res[res.length - 6]);
+        assertEquals((byte) (0x22), res[12]);
+        assertEquals((byte) (0x15), res[25]);
     }
 }

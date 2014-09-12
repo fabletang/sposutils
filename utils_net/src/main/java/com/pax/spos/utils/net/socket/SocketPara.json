@@ -1,7 +1,7 @@
 {
     "model": "socketPara",
     "version": "1.0",
-    "desc":"设置以头字节为长度标识的socket bytes 参数",
+    "desc": "设置以头字节为长度标识的socket bytes 参数, lenType HEX BCD ASC 三种",
 
     "host": "localhost",
     "port": 1999,
@@ -9,9 +9,9 @@
     "timeout_r": 500,
     "timeout_w": 500,
 
-    "headLenNum_in":2,
-    "lenType_in":"HEX",
+    "headLenNum_in": 2,
+    "lenType_in": "HEX",
 
-    "headLenNum_out":4,
-    "lenType_out":"BCD"
+    "headLenNum_out": 4,
+    "lenType_out": "BCD"
 }

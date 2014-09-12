@@ -653,6 +653,11 @@ public class TLVUtils {
         return items.get(items.size() - 1);
     }
 
+    /**
+     * TLV嵌套工具， 用于添加 tlv.subTLVs, 可以智能处理 tlv.tag(变0xC为0xE)
+     * @param srcTLV   son TLV
+     * @param destTLV father TLV
+     */
     public static void addSubTLV(TLV srcTLV, TLV destTLV) {
         if (srcTLV == null || destTLV == null) return;
 
@@ -806,11 +811,18 @@ public class TLVUtils {
      * @return byte[]
      */
     private static byte[] hasValueTLV2Bytes(TLV tlv) {
-//        if (tlv == null || !justSpos(tlv.getTag()) || tlv.getFatherTag() > 0) {
-//            return null;
-//        }
-        if (tlv.getValue() == null || tlv.getValue().length < 1) { //            return null;
+        if (tlv == null || !justSpos(tlv.getTag())) {
             return null;
+        }
+        if (tlv.getValue() == null || tlv.getValue().length < 1) { //            return null;
+
+            byte[] dest = new byte[5];
+            byte[] tagBytes=ByteStringHex.int2FixBytes(tlv.getTag(),4);
+            System.arraycopy(tagBytes,0,dest,0,4);
+            return dest;
+//            byte[] dest = new byte[5];
+        }
+        if (tlv.getValue().length == 0||!justConstructed(tlv.getTag())) { //            return null;
         }
 //        tlv.length 可以为0, 但是 如果不为零，并且不等于value的长度，视为非法
 //        if (tlv.getLength() != tlv.getValue().length && tlv.getLength() != 0) {
@@ -829,10 +841,17 @@ public class TLVUtils {
     }
 
     private static byte[] noValueTLV2Bytes(TLV tlv, int sonBytesLen) {
-        if (tlv == null) {
+        if (tlv == null|| !justSpos(tlv.getTag()) ) {
 //            if (tlv == null || !justSpos(tlv.getTag()) || !justConstructed(tlv.getTag()) || tlv.getValue() != null) {
             return null;
         }
+        if (tlv.getValue()==null&&!justConstructed(tlv.getTag())){
+            byte[] dest = new byte[5];
+            byte[] tagBytes=ByteStringHex.int2FixBytes(tlv.getTag(),4);
+            System.arraycopy(tagBytes,0,dest,0,4);
+            return dest;
+        }
+
 //        byte[] lenBytes = TLVLenth2Bytes(tlv.getLength()+sonBytesLen);
         byte[] lenBytes = TLVLenth2Bytes(sonBytesLen);
 
@@ -896,20 +915,18 @@ public class TLVUtils {
         if (flatTLVs == null || flatTLVs.size() < 1) {
             return bytes;
         }
-//        ArrayList<Byte> dest=new ArrayList<Byte>();
-//        for (Byte b:bytes){
-//            dest.add(b);
-//        }
-//        if (bytes == null) bytes = new byte[0];
         int len = flatTLVs.size();
         TLV tlv = flatTLVs.get(len - 1);
+        if (tlv==null||tlv.getTag()==0){
+            flatTLVs.remove(tlv);
+            bytes = parseTLVs(flatTLVs, bytes, sonsLen);
+        }
 //        System.out.println("-----parseTLVs. tlv =" + ByteStringHex.int2HexStr(tlv.getTag()));
 //        if (tlv.getFatherTag()!=0){
         // if (tlv.getSubTLVs()!=null){tlv.setValue(null);}
         if (tlv.isConstructed()) {
             tlv.setValue(null);
         }
-
 
         if (tlv.getValue() == null || tlv.isConstructed()) {
 //            System.out.println ("===============================");
@@ -1033,13 +1050,16 @@ public class TLVUtils {
 
         List<TLV> flatTLVs = new ArrayList<TLV>();
         if (tlv == null || tlv.getTag() == 0) {
-            return flatTLVs;
+//            return flatTLVs;
+            return null;
         }
         flatTLVs.add(tlv);
         List<TLV> subTLVs = tlv.getSubTLVs();
         if (subTLVs == null) return flatTLVs;
         for (TLV tlv1 : subTLVs) {
-            flatTLVs.addAll(TLV2FlatTLVs(tlv1));
+            if (tlv1!=null&&justSpos(tlv1.getTag())) {
+                flatTLVs.addAll(TLV2FlatTLVs(tlv1));
+            }
         }
         return flatTLVs;
     }
@@ -1051,7 +1071,9 @@ public class TLVUtils {
         List<TLV> dest = new ArrayList<TLV>();
         for (TLV tlv : TLVs) {
 //            TLV2FlatTLVs2(tlv, dest);
-            dest.addAll(TLV2FlatTLVs(tlv));
+            if (tlv!=null&&justSpos(tlv.getTag())) {
+                dest.addAll(TLV2FlatTLVs(tlv));
+            }
         }
         return dest;
     }

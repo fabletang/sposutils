@@ -1,6 +1,7 @@
 package com.pax.spos.utils.net.http;
 
 
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -32,11 +33,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -264,9 +260,13 @@ public class HttpClientUtil {
         }
         return responseContent;
     }
-    public static String sendSSLRequest () throws KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException {
+    public static String sendSSLRequest (String reqUrl,File sslKey) throws KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException {
+        if (reqUrl==null||reqUrl.length()<12) return null;
+        if (sslKey==null || sslKey.length()<16) return null;
+
         KeyStore trustStore  = KeyStore.getInstance(KeyStore.getDefaultType());
-        FileInputStream instream = new FileInputStream(new File("my.keystore"));
+//        FileInputStream instream = new FileInputStream(new File("my.keystore"));
+        FileInputStream instream = new FileInputStream(sslKey);
         try {
             trustStore.load(instream, "nopassword".toCharArray());
         } catch (CertificateException e) {
@@ -292,14 +292,22 @@ public class HttpClientUtil {
                 .build();
         try {
 
-            HttpGet httpget = new HttpGet("https://localhost/");
+//            HttpGet httpget = new HttpGet("https://localhost/");
+            HttpGet httpget = new HttpGet(reqUrl);
 
             System.out.println("executing request" + httpget.getRequestLine());
 
             CloseableHttpResponse response = httpclient.execute(httpget);
+//            int statusCode=client.executeMethod(method);
+            int statusCode=response.getStatusLine().getStatusCode();
+            if (statusCode!= HttpStatus.SC_OK){
+               return null;
+            }
             try {
                 HttpEntity entity = response.getEntity();
 
+                String responseContent = EntityUtils.toString(entity, ContentType.getOrDefault(entity).getCharset());
+                //EntityUtils.toByteArray()
                 System.out.println("----------------------------------------");
                 System.out.println(response.getStatusLine());
                 if (entity != null) {

@@ -176,7 +176,7 @@ public class ByteStringHex {
      * @return
      */
     public static String hi4Bit2HexStr(byte hiBit4) {
-        return Integer.toHexString(0x0F & hiBit4 >> 4).toUpperCase();
+        return Integer.toHexString(0x0F & hiBit4 >>> 4).toUpperCase();
     }
 
     /**

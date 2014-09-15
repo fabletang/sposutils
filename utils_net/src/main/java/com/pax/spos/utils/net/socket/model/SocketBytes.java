@@ -12,7 +12,10 @@ import java.util.Date;
  * isFitSocketPara 是否复合socketPara.json 的规范
  * bytesLen 字节流长度， 如果 isFitSocketPara==false，为字节流本身长度
  * bytesContent 如果 isFitSocketPara==true, 为除去开始表示长度字符的字节流。
- * createDate 为socketBytes对象产生的日期
+ * sendDate 发送的日期
+ * receiveDate 接收的日期
+ * isConnectTime boolean 是否连接超时
+ * isReadTime boolean 是否读超时(接收超时)
  */
 public class SocketBytes {
     private boolean isFitSocketPara;
@@ -20,21 +23,70 @@ public class SocketBytes {
     private byte[] bytesContent;
     // timeinms 为socketBytes对象产生的时间，用 1970年1月1日起的毫秒的数量表示日期.
 //    private long timeinms;
-    private Date createdDate;
+    private Date sendDate;
+    boolean isReadTimeout;
+    boolean isWriteTimeout;
+    boolean isConnectTimeout;
+    private Date receiveDate;
+
 
     public SocketBytes() {
-        this.createdDate = new Date();
+//        this.sendDate = new Date();
     }
 
     @Override
     public String toString() {
         return "socketBytes{" +
-                "isFitSocketPara=" + isFitSocketPara +
+                " isFitSocketPara=" + isFitSocketPara +
+                " isConnectTimeout=" + isConnectTimeout+
+                " isReadTimeout=" + isReadTimeout+
+                " isWriteTimeout=" + isWriteTimeout +
                 ", bytesLen=" + bytesLen +
-                ", bytesContent=" + Arrays.toString(bytesContent) +
+                ", bytesContent=" + Arrays.toString(bytesContent) + "\n" +
                 ", bytesContent_HEX=" + ByteStringHex.bytes2HexStr(bytesContent) +
-                ", createdDate=" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(createdDate) +
+                ", sendDate=" + formatDate(sendDate) +
+                ", receiveDate=" + formatDate(receiveDate) +
+//                ", receiveDate=" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(receiveDate) +
                 '}';
+    }
+    private String formatDate(Date date){
+        if (date==null){
+            return null;
+        }else{
+           return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(sendDate);
+        }
+    }
+
+    public boolean isConnectTimeout() {
+        return isConnectTimeout;
+    }
+
+    public void setConnectTimeout(boolean isConnectTimeout) {
+        this.isConnectTimeout = isConnectTimeout;
+    }
+
+    public boolean isReadTimeout() {
+        return isReadTimeout;
+    }
+
+    public void setReadTimeout(boolean isReadTimeout) {
+        this.isReadTimeout = isReadTimeout;
+    }
+
+    public boolean isWriteTimeout() {
+        return isWriteTimeout;
+    }
+
+    public void setWriteTimeout(boolean isWriteTimeout) {
+        this.isWriteTimeout = isWriteTimeout;
+    }
+
+    public Date getReceiveDate() {
+        return receiveDate;
+    }
+
+    public void setReceiveDate(Date receiveDate) {
+        this.receiveDate = receiveDate;
     }
 
     public boolean isFitSocketPara() {
@@ -61,11 +113,11 @@ public class SocketBytes {
         this.bytesContent = bytesContent;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getSendDate() {
+        return sendDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
     }
 }

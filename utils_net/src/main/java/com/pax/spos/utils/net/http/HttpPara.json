@@ -1,0 +1,8 @@
+{
+    "model": "HttpPara",
+    "version": "1.0",
+    "desc": "http timeout_c 连接超时ms, timeout_r 读超时间",
+
+    "timeout_c": 5000,
+    "timeout_r": 10000
+}

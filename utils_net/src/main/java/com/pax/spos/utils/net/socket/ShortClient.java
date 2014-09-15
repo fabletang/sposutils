@@ -6,6 +6,7 @@ import com.pax.spos.utils.net.socket.model.SocketBytes;
 import com.pax.spos.utils.net.socket.model.SocketPara;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.ReadFuture;
+import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IoSession;
@@ -134,6 +135,7 @@ public class ShortClient {
         ConnectFuture future;
         try {
             future = connector.connect(new InetSocketAddress(host, port));
+
             if (future.awaitUninterruptibly(timeout_c)) {
 
             } else {
@@ -167,12 +169,31 @@ public class ShortClient {
         session = getSession();
         if (session == null || !session.isConnected()) {
             LOGGER.warning("------- shortclient socket 无法建立-----");
-            return null;
+            socketBytesSend.setConnectTimeout(true);
+            return socketBytesSend;
         }
+        SocketBytes socketBytesReceived=null;
         try {
-            socketBytesSend.setCreatedDate(new Date());
-            session.write(socketBytesSend);
-            ReadFuture readFuture;
+            Date sendDate=new Date();
+            socketBytesSend.setSendDate(sendDate);
+//            session.write(socketBytesSend);
+            WriteFuture writeFuture;
+
+                //session.write(bytes).awaitUninterruptibly(timeout_w);
+                writeFuture = session.write(socketBytesSend);
+
+                if (writeFuture.awaitUninterruptibly(timeout_w)) {
+                    //   writeFuture.getSession().resumeRead();
+                } else {
+//                    LOGGER.error("write to:" + host + " timeout ms:" + timeout_w);
+
+                    socketBytesReceived=new SocketBytes();
+                    socketBytesReceived.setReadTimeout(true);
+                    socketBytesReceived.setSendDate(sendDate);
+                    return null;
+                }
+
+                ReadFuture readFuture;
             readFuture = session.read();
             if (readFuture.awaitUninterruptibly(timeout_r)) {
                 Object message = readFuture.getMessage();
@@ -180,22 +201,26 @@ public class ShortClient {
                 if (message != null) {
 //                    byte[] bytesReceived = (byte[]) (message);
 //                    LOGGER.info("sessionId:" + sessionId + " +read:" + ByteStringHex.bytes2HexStr(bytesReceived));
-                    SocketBytes socketBytesReceived = (SocketBytes) message;
-                    LOGGER.info("-- ShortClient-" + " socketBytesReceived:" + socketBytesReceived);
+                    socketBytesReceived = (SocketBytes) message;
                     // readFuture.getSession().resumeWrite();
-                    if (socketBytesReceived != null) {
-                        socketBytesReceived.setCreatedDate(new Date());
-                    }
+//                    socketBytesReceived.setSendDate(socketBytesSend.getSendDate());
+                    socketBytesReceived.setSendDate(sendDate);
+                    socketBytesReceived.setReceiveDate(new Date());
+                    LOGGER.info("-- ShortClient-" + " socketBytesReceived:" + socketBytesReceived);
                     return socketBytesReceived;
+                }else {
+                    socketBytesReceived=new SocketBytes();
+                    socketBytesReceived.setSendDate(socketBytesSend.getSendDate());
+                    socketBytesReceived.setReadTimeout(true);
                 }
             }
         } catch (Exception e) {
-
+            LOGGER.warning("------- shortclient e: -----"+e.getMessage());
         } finally {
 //            session.close(true);
             clear();
         }
-        return (SocketBytes) session.read().getMessage();
+        return socketBytesReceived;
     }
 
 

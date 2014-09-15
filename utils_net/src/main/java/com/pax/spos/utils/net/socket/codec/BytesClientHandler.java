@@ -23,7 +23,7 @@ public class BytesClientHandler extends IoHandlerAdapter {
 //            session.close(true);
 //        }
 //        socketBytes = (SocketBytes) message;
-//        socketBytes.setCreatedDate(new Date());
+//        socketBytes.setSendDate(new Date());
 //        byte[] dest = socketBytes.getBytesContent();
 //        dest[0] = (byte) (0x11);
 //        socketBytes.setBytesContent(dest);

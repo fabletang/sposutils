@@ -51,7 +51,7 @@ public class BytesDecoder extends CumulativeProtocolDecoder {
 //        int len= ByteStringHex.bytes2Int(headBytes);
         int len = SocketClientUtil.getContentLen(buf, !isServer);
         SocketBytes socketBytes = new SocketBytes();
-        Date date = new Date();
+//        Date date = new Date();
         if (len == bufLen - headLen) {
             socketBytes.setFitSocketPara(true);
             byte[] content = new byte[bufLen - headLen];
@@ -65,7 +65,7 @@ public class BytesDecoder extends CumulativeProtocolDecoder {
         }
         socketBytes.setBytesLen(len);
         socketBytes.setBytesLen(socketBytes.getBytesContent().length);
-        socketBytes.setCreatedDate(date);
+//        socketBytes.setSendDate(date);
 
         out.write(socketBytes);
         LOGGER.info("doDecode isServer:" + isServer + " out =" + socketBytes);

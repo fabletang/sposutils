@@ -1,3 +1,7 @@
+package com.pax.spos.utils.net.http;
+
+import com.pax.spos.utils.net.http.HttpClientUtil;
+import com.pax.spos.utils.net.http.model.HttpBytes;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +14,7 @@ public class HttpClientUtilsTest {
    }
    @Test
    public void testHttpGet() throws Exception {
-     httpBytes=HttpClientUtil.sendGetReq(httpBytes);
+     httpBytes= HttpClientUtil.sendGetReq(httpBytes);
      System.out.println(httpBytes);
    }
     @Test

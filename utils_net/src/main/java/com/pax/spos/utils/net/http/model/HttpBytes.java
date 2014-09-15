@@ -1,12 +1,23 @@
+package com.pax.spos.utils.net.http.model;
+
+import com.pax.spos.utils.ByteStringHex;
 import org.apache.http.NameValuePair;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by fable on 14-9-12.
+ * reqUrl String 请求字符串
+ * sslKey File https请求所需要的公钥
+ * nvps   NameValuePairh ttp post 请求的键值对List
+ * httpStatusCode int http server 返回码， 200 为正常
+ * responseBytes byte[] 返回的bytes
+ * sendDate 发送日期
+ * receiveDate 接收日期
  */
 public class HttpBytes {
     String reqUrl;
@@ -18,8 +29,11 @@ public class HttpBytes {
     byte[] responseBytes;
     Date receiveDate;
 
+    boolean isReadTimeout;
+    boolean isConnectTimeout;
+
     public HttpBytes() {
-        sendDate=new Date();
+//        sendDate=new Date();
     }
 
     @Override
@@ -28,11 +42,35 @@ public class HttpBytes {
                 "reqUrl='" + reqUrl + '\'' +
                 ", sslKey=" + sslKey +
                 ", nvps=" + nvps +
-                ", sendDate=" + sendDate +
+                ", sendDate=" + formatDate(sendDate) +
                 ", httpStatusCode=" + httpStatusCode +
-                ", responseBytes=" + Arrays.toString(responseBytes) +
-                ", receiveDate=" + receiveDate +
+                ", responseBytes=" + ByteStringHex.bytes2HexStr(responseBytes) +
+                ", receiveDate=" + formatDate(receiveDate)+
                 '}';
+    }
+
+    private String formatDate(Date date){
+        if (date==null){
+            return null;
+        }else{
+            return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(sendDate);
+        }
+    }
+
+    public boolean isReadTimeout() {
+        return isReadTimeout;
+    }
+
+    public void setReadTimeout(boolean isReadTimeout) {
+        this.isReadTimeout = isReadTimeout;
+    }
+
+    public boolean isConnectTimeout() {
+        return isConnectTimeout;
+    }
+
+    public void setConnectTimeout(boolean isConnectTimeout) {
+        this.isConnectTimeout = isConnectTimeout;
     }
 
     public List<NameValuePair> getNvps() {

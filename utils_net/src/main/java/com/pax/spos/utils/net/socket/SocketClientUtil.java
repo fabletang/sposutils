@@ -86,11 +86,14 @@ public class SocketClientUtil {
     /**
      * socket 短链接发送
      * <p/>
-     * SocketBytes 字节流对象
-     * isFitSocketPara 是否复合socketPara.json 的规范,不符合将直接发送bytesConstent (byte[])
+     * socket 字节流对象
+     * isFitSocketPara 是否复合socketPara.json 的规范
      * bytesLen 字节流长度， 如果 isFitSocketPara==false，为字节流本身长度
      * bytesContent 如果 isFitSocketPara==true, 为除去开始表示长度字符的字节流。
-     * createDate 为socketBytes对象产生的日期
+     * sendDate 发送的日期
+     * receiveDate 接收的日期
+     * isConnectTime boolean 是否连接超时
+     * isReadTime boolean 是否读超时(接收超时)
      *
      * @param socketBytesSend 待发送的 SocketBytes 对象,
      *                        isFitSocketPara(默认为false)/bytesContent (byte[])不能为空

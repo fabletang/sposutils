@@ -238,7 +238,7 @@ public class TLVUtils {
 
     private static byte[] filterSposBytes(byte[] bytes) {
         // 长度校验
-        if (bytes == null || bytes.length < 6) {
+        if (bytes == null || bytes.length < 5) {
             return null;
         }
         // 剔除无效数据
@@ -253,7 +253,7 @@ public class TLVUtils {
         }
         int bytesLen = bytes.length;
         int len = bytesLen - pos;
-        if (len <= 6) {
+        if (len <= 5) {
             return null;
         }
         byte[] dest = new byte[len];
@@ -263,7 +263,7 @@ public class TLVUtils {
 
     private static List<TLV> bytes2FlatTLVs(byte[] bytes) {
 //        System.out.println("bytes2FlatTLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
-        if (bytes == null || bytes.length < 6) {
+        if (bytes == null || bytes.length < 5) {
             return null;
         }
         bytes = filterSposBytes(bytes);
@@ -275,10 +275,10 @@ public class TLVUtils {
     }
 
     private static List<TLV> parseBytes(byte[] bytes, List<TLV> flatTLVs, int fatherTag, int pos) {
-        if (bytes == null || bytes.length < 6) {
+        if (bytes == null || bytes.length < 5) {
             return null;
         }
-        if (bytes.length - pos < 6) {
+        if (bytes.length - pos < 5) {
             return flatTLVs;
         }
         //todo bug
@@ -344,7 +344,7 @@ public class TLVUtils {
                 flatTLVs.add(tlv);
                 pos += tlv.getValue().length;
             }
-            if (bytesLen - pos >= 6) {
+            if (bytesLen - pos >= 5) {
 //            System.out.println("---parse Bytes:" + flatTLVs);
 //            System.out.println("---parse fatherTag:" + ByteStringHex.int2HexStr(fatherTag));
 

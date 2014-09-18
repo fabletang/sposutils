@@ -45,4 +45,24 @@ public class TagJsonUtils {
         this.tagJson=gson.fromJson(br, TagJson.class);
         return tagJson;
     }
+
+    /**
+     * for androin read assets/*.json
+     *
+     * @param tagjson
+     * @return
+     * @throws IOException
+     */
+    public TagJson parseJson(InputStream tagjson) throws IOException {
+
+        if (tagJson!=null) return tagJson;
+        if (tagjson == null || tagjson.available() < 6 ) {
+            return null;
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(tagjson));
+        Gson gson = new Gson();
+        if (!br.ready()) return null;
+        this.tagJson=gson.fromJson(br, TagJson.class);
+        return tagJson;
+    }
 }

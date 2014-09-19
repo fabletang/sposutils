@@ -61,6 +61,32 @@ public class EmvTLVUtilsTest {
     }
 
     @Test
+    public  void testFindTagBytes () throws Exception{
+
+        String hexStr = "9F5D0600000000033657126205150010022823D201120100000201000F9F37047549448C82027C009F34009F3303E0E1C89F100A07021703100000010A01";
+        byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
+        byte[] tagBytes=EmvTLVUtils.findTagBytes(test,0);
+//        System.out.println("testFindTagBytes="+ByteStringHex.bytes2HexStr(tagBytes));
+        assertEquals(0x9F5D,ByteStringHex.bytes2Int(tagBytes));
+        hexStr="3F410109";
+        test = ByteStringHex.hexStr2Bytes(hexStr);
+        tagBytes=EmvTLVUtils.findTagBytes(test,0);
+//        System.out.println("testFindTagBytes="+ByteStringHex.bytes2HexStr(tagBytes));
+        assertEquals(0x3F41,ByteStringHex.bytes2Int(tagBytes));
+        hexStr="8F410109";
+        test = ByteStringHex.hexStr2Bytes(hexStr);
+        tagBytes=EmvTLVUtils.findTagBytes(test,0);
+        assertEquals(0x8F,ByteStringHex.bytes2Int(tagBytes));
+//        System.out.println("testFindTagBytes="+ByteStringHex.bytes2HexStr(tagBytes));
+
+        hexStr="5712 620515 001002 2823D2 011201 000002 01000F";
+        test = ByteStringHex.hexStr2Bytes(hexStr);
+        tagBytes=EmvTLVUtils.findTagBytes(test,0);
+        assertEquals(0x57,ByteStringHex.bytes2Int(tagBytes));
+        System.out.println("testFindTagBytes="+ByteStringHex.bytes2HexStr(tagBytes));
+
+    }
+    @Test
     public void testBytes2TopNestedTLVs() throws Exception {
 
 //    String hexStr= "E101000015C101010303010105E101020308C101020303027776";
@@ -76,9 +102,24 @@ public class EmvTLVUtilsTest {
 
         System.out.println("testBytes2TopNestedTLVs res0="+res0);
         assertEquals(hexStr, res0);
+
+        hexStr = "9F5D 06 000000 000336 5712 620515 001002 2823D2 011201 000002 01000F 9F37 047549448C82027C009F34009F3303E0E1C89F100A07021703100000010A01";
+         test = ByteStringHex.hexStr2Bytes(hexStr);
+        System.out.println("testBytes2TopNestedTLVs hexStr="+hexStr);
+        res = EmvTLVUtils.bytes2TopNestedTLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
+        assertEquals(7, res.size());
+        System.out.println("testBytes2TopNestedTLVs res="+res);
+        System.out.println("testBytes2TopNestedTLVs res.siez="+res.size());
+        res0 = ByteStringHex.bytes2HexStr(EmvTLVUtils.TLVs2Bytes(res));
+        System.out.println("testBytes2TopNestedTLVs hex ="+hexStr.replaceAll(" ",""));
+        System.out.println("testBytes2TopNestedTLVs res0="+res0);
+        assertEquals(hexStr.replaceAll(" ",""), res0);
+//        assertEquals(1, res.size());
     }
 
-    @Test
+//    @Test
     public void testTLV2Bytes() throws Exception {
 //        String  "E101000015C101010303010105E101020310C101020303027776";
         String hexStr = "01";

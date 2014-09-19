@@ -82,7 +82,7 @@ public class TLVUtilsTest {
 //        List<TLV> res=TLVUtils.bytes2TopNestedTLVs(test);
         List<TLV> res = TLVUtils.bytes2NestedFlatTLVs(test);
 //        List<TLV> res=TLVUtils.bytes2FlatTLVs(test);
-        assertEquals(5, res.size());
+        assertEquals(6, res.size());
         String res3 = ByteStringHex.bytes2HexStr(TLVUtils.TLV2Bytes(res.get(2)));
 //        System.out.println("testBytes2NestedFlatTLVs "+res3);
         hexStr="CF 00 00 00 02 A0 01 C1 01 01 03 03 33 2E 31";
@@ -92,12 +92,12 @@ public class TLVUtilsTest {
         hexStr = "C1234567 00 E10100001DC101010303010105E101020310C101020303027776C101030303020122";
         test=ByteStringHex.hexStr2Bytes(hexStr);
         res=TLVUtils.bytes2NestedFlatTLVs(test);
-        assertEquals(5, res.size());
+        assertEquals(6, res.size());
 
         hexStr = "E101000022C101010303010105 C123456700 E101020310C101020303027776C101030303020122";
         test=ByteStringHex.hexStr2Bytes(hexStr);
         res=TLVUtils.bytes2NestedFlatTLVs(test);
-        assertEquals(5, res.size());
+        assertEquals(6, res.size());
 
         hexStr= "CF 00 00 00 02 A1 01 " +
                 "C2 01 02 03 01 01 " +
@@ -113,7 +113,7 @@ public class TLVUtilsTest {
 //        System.out.println(ByteStringHex.hexStr2Bytes(hexStr).length);
         test=ByteStringHex.hexStr2Bytes(hexStr);
         res=TLVUtils.bytes2NestedFlatTLVs(test);
-        assertEquals(6, res.size());
+        assertEquals(7, res.size());
 
     }
 

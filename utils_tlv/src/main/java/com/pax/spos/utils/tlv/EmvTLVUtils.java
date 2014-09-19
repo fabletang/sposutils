@@ -12,7 +12,7 @@ import java.util.List;
 public class EmvTLVUtils {
     private static byte[] filterEmvBytes(byte[] bytes) {
         // 长度校验
-        if (bytes == null || bytes.length < 3) {
+        if (bytes == null || bytes.length < 2) {
             return null;
         }
         // 剔除无效数据
@@ -27,7 +27,7 @@ public class EmvTLVUtils {
         }
         int bytesLen = bytes.length;
         int len = bytesLen - pos;
-        if (len <= 3) {
+        if (len <= 2) {
             return null;
         }
         byte[] dest = new byte[len];
@@ -35,27 +35,29 @@ public class EmvTLVUtils {
         return dest;
     }
 
-    private static byte[] findTagBytes (byte[] bytes){
+    public static byte[] findTagBytes (byte[] bytes,int start){
         if (bytes==null||bytes.length<2)return null;
-        int pos=0;
-        for (;pos<bytes.length-2;pos++){
+        int pos=start;
+        for (;pos<bytes.length;){
            if ((bytes[pos]&0x1F)==0x1F){
+               pos+=1;
            }{
                 break;
             }
         }
-        byte[] dest=new byte[pos+1];
-        System.arraycopy(bytes,0,dest,0,pos+1);
+        byte[] dest=new byte[pos+1-start];
+//        System.out.println(pos);
+        System.arraycopy(bytes,start,dest,0,pos+1-start);
         return dest;
     }
     public static boolean justConstructed(byte bits8) {
         return ((bits8&0x20)==0x20);
     }
     private static List<EmvTLV> parseBytes(byte[] bytes, List<EmvTLV> flatTLVs, int fatherTag, int pos) {
-        if (bytes == null || bytes.length < 3) {
+        if (bytes == null || bytes.length < 2) {
             return null;
         }
-        if (bytes.length - pos < 3) {
+        if (bytes.length - pos < 2) {
             return flatTLVs;
         }
         //todo bug
@@ -63,17 +65,21 @@ public class EmvTLVUtils {
         int bytesLen = bytes.length;
         int tag;
         int len;
-        int lenBytes = 1;// length 对应的bytes2Int
+//        int lenBytes = 1;// length 对应的bytes2Int
+        int lenBytes=1;// length 对应的bytes2Int
         //List<TLV> items = new ArrayList<TLV>();
         // parse tag
         EmvTLV tlv = new EmvTLV();
 //        byte[] tagBytes = new byte[4];
-        byte[] tagBytes = findTagBytes(bytes);
-        if (tagBytes==null) return flatTLVs;
+        byte[] tagBytes = findTagBytes(bytes,pos);
+//        System.out.println("tagBytes="+ByteStringHex.bytes2HexStr(tagBytes));
+        if (tagBytes==null||tagBytes.length<1) return flatTLVs;
         int tagLen=tagBytes.length;
         System.arraycopy(bytes, pos, tagBytes, 0, tagLen);
         pos += tagLen;
+//            System.out.println("pos="+ pos);
         tag = ByteStringHex.bytes2Int(tagBytes);
+//            System.out.println("tagBytes="+ ByteStringHex.bytes2HexStr(tagBytes));
 
         if ((bytes[pos] & 0x80) == 0x80) {
 //            lenBytes = (bytes[pos] & 0x7F);
@@ -97,10 +103,29 @@ public class EmvTLVUtils {
         if (len==0){
             pos +=1;
 //            System.out.println("len==0");
-            flatTLVs = (parseBytes(bytes, flatTLVs, fatherTag, pos));
+            tlv.setValue(null);
+            tlv.setTag(tag);
+            tlv.setLength(len);
+            boolean isConstructed=justConstructed(tagBytes[0]);
+            tlv.setConstructed(isConstructed);
+            tlv.setFatherTag(fatherTag);
+            if (tlv.isConstructed()) {
+                fatherTag = tlv.getTag();
+            }
+            flatTLVs.add(tlv);
+            if (bytesLen - pos >= 2) {
+                flatTLVs = (parseBytes(bytes, flatTLVs, fatherTag, pos));
+            }
         }else {
             byte[] value = new byte[len];
-            System.arraycopy(bytes, pos + 1, value, 0, len);
+//            System.arraycopy(bytes, pos + 1, value, 0, len);
+//            System.out.println("===pos="+pos);
+//            System.out.println("===len="+len);
+            if (len+pos+1>bytes.length){
+             //   System.arraycopy(bytes, pos + 1, value, 0, bytes.length-pos-1);
+            }else {
+                System.arraycopy(bytes, pos + 1, value, 0, len);
+            }
             pos += lenBytes;
 //            pos = i;
             tlv.setValue(value);
@@ -399,7 +424,7 @@ public class EmvTLVUtils {
 
     private static List<EmvTLV> bytes2FlatTLVs(byte[] bytes) {
 //        System.out.println("bytes2FlatTLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
-        if (bytes == null || bytes.length < 3) {
+        if (bytes == null || bytes.length < 2) {
             return null;
         }
 //        bytes = filterEmvBytes(bytes);

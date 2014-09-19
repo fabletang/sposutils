@@ -337,7 +337,18 @@ public class TLVUtils {
         if (len==0){
             pos +=1;
 //            System.out.println("len==0");
-            flatTLVs = (parseBytes(bytes, flatTLVs, fatherTag, pos));
+            tlv.setValue(null);
+            tlv.setTag(tag);
+            tlv.setLength(len);
+            tlv = processTag(tlv);
+            tlv.setFatherTag(fatherTag);
+            if (tlv.isConstructed()) {
+                fatherTag = tlv.getTag();
+            }
+            flatTLVs.add(tlv);
+            if (bytesLen - pos >= 2) {
+                flatTLVs = (parseBytes(bytes, flatTLVs, fatherTag, pos));
+            }
         }else {
             byte[] value = new byte[len];
             System.arraycopy(bytes, pos + 1, value, 0, len);

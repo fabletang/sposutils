@@ -1,0 +1,29 @@
+package com.pax.spos.utils;
+
+
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+* Created by fable on 14-9-19.
+ */
+public class AndroidConfUtil {
+
+
+  public InputStream getInputStreamFromAssets(Context context, String fileName){
+    if (null == context || null == fileName) return null;
+    AssetManager am = context.getAssets();
+         InputStream dest=null;
+         try {
+             dest = am.open(fileName);
+         } catch (IOException e) {
+             e.printStackTrace();
+         }finally {
+             am.close();
+         }
+         return dest;
+  }
+}

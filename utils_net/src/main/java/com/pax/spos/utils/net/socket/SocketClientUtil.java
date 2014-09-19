@@ -5,13 +5,28 @@ import com.pax.spos.utils.net.socket.model.SocketBytes;
 import com.pax.spos.utils.net.socket.model.SocketPara;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by fable on 14-9-10.
  */
 public class SocketClientUtil {
+    public static InputStream socketParaInputSteam;
+
+    public static InputStream getSocketParaInputSteam() {
+        return socketParaInputSteam;
+    }
+
+    public static void setSocketParaInputSteam(InputStream socketParaInputSteam) {
+        SocketClientUtil.socketParaInputSteam = socketParaInputSteam;
+    }
+
     public static SocketPara getSocketPara() throws IOException {
-        return SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
+        if (socketParaInputSteam==null){
+            return SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
+        }else{
+            return SocketParaJsonUtils.getInstance().parseJson(socketParaInputSteam);
+        }
     }
 
     public static byte[] buildHeadBytes(int len, boolean isIn) throws IOException {

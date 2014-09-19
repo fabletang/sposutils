@@ -4,6 +4,7 @@ import com.pax.spos.utils.ByteStringHex;
 import com.pax.spos.utils.tlv.model.TLV;
 import com.pax.spos.utils.tlv.model.TLVComparator;
 
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -16,6 +17,20 @@ import java.util.*;
  * version: 0.9
  */
 public class TLVUtils {
+     private static InputStream tagjsonInputStream;
+
+    public static InputStream getTagjsonInputStream() {
+        return tagjsonInputStream;
+    }
+
+    /**
+     * 用于Clazz tag 归类
+     * @param tagjsonInputStream
+     */
+    public static void setTagjsonInputStream(InputStream tagjsonInputStream) {
+        TLVUtils.tagjsonInputStream = tagjsonInputStream;
+    }
+
     /**
      * 判断 tag 8bit byte 是否复合结构
      * <p/>
@@ -156,6 +171,9 @@ public class TLVUtils {
         tlv.setDataType(justDataType(byteTag[3]));
         // 调用 sortutils 处理
 //        tlv = ClazzUtils.SortTag(tag, tlv);
+        if (tagjsonInputStream!=null){
+            ClazzUtils.setTagjsonInputStream(tagjsonInputStream);
+        }
         tlv = ClazzUtils.ClazzTag(tag, tlv);
         return tlv;
     }

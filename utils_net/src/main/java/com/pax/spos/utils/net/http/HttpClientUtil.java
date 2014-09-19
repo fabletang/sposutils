@@ -21,6 +21,7 @@ import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.security.KeyStore;
 import java.util.Date;
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * Created by fable on 14-9-12.
  * http 请求的4种方法， http get/post和 https get/post
- *
+ * httpParaInputSteam 用于解决 android 不能访问jar目录的HttpPara.json的问题
  * httpBytes 解释
  * reqUrl String 请求字符串
  * sslKey File https请求所需要的公钥
@@ -53,6 +54,16 @@ public class HttpClientUtil {
     public static HttpPara httpPara;
     public static RequestConfig requestConfig;
 
+    public static InputStream httpParaInputSteam;
+
+    public static InputStream getHttpParaInputSteam() {
+        return httpParaInputSteam;
+    }
+
+    public static void setHttpParaInputSteam(InputStream httpParaInputSteam) {
+        HttpClientUtil.httpParaInputSteam = httpParaInputSteam;
+    }
+
     /**
      * 得到并设置http连接参数，如果httpPara==null或者timeout_c==0, timeout_c=5秒, timeout_r=10秒
      * @return
@@ -60,7 +71,11 @@ public class HttpClientUtil {
      */
     public static HttpPara getHttpPara() throws IOException {
         if (httpPara==null){
-            httpPara=HttpParaJsonUtils.getInstance().parseJson("HttpPara.json");
+            if (httpParaInputSteam==null){
+                httpPara=HttpParaJsonUtils.getInstance().parseJson("HttpPara.json");
+            }else{
+                httpPara=HttpParaJsonUtils.getInstance().parseJson(httpParaInputSteam);
+            }
             if (httpPara==null || httpPara.getTimeout_c()==0){
                 timeout_c=5000;
             }else {

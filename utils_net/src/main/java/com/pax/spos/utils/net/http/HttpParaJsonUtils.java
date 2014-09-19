@@ -18,6 +18,16 @@ public class HttpParaJsonUtils {
     private static HttpParaJsonUtils instance = null;
     private HttpPara httpPara;
 
+    private InputStream httpParaInputStream;
+
+    public InputStream getHttpParaInputStream() {
+        return httpParaInputStream;
+    }
+
+    public void setHttpParaInputStream(InputStream httpParaInputStream) {
+        this.httpParaInputStream = httpParaInputStream;
+    }
+
     private HttpParaJsonUtils() {
     }
 
@@ -38,6 +48,21 @@ public class HttpParaJsonUtils {
         }
         InputStream is = this.getClass().getResourceAsStream(httpParaJsonPath);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        Gson gson = new Gson();
+        if (!br.ready()) return null;
+        this.httpPara = gson.fromJson(br, HttpPara.class);
+        return httpPara;
+    }
+
+    public HttpPara parseJson(InputStream httpParaInputStream) throws IOException {
+        if (httpPara != null) {
+            return httpPara;
+        }
+
+        if (httpParaInputStream==null){
+            return null;
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(httpParaInputStream));
         Gson gson = new Gson();
         if (!br.ready()) return null;
         this.httpPara = gson.fromJson(br, HttpPara.class);

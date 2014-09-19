@@ -42,4 +42,19 @@ public class SocketParaJsonUtils {
         this.socketPara = gson.fromJson(br, SocketPara.class);
         return socketPara;
     }
+
+    public SocketPara parseJson(InputStream socketParaInputStream) throws IOException {
+        if (socketPara != null) {
+            return socketPara;
+        }
+
+        if (null==socketParaInputStream){
+            return null;
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(socketParaInputStream));
+        Gson gson = new Gson();
+        if (!br.ready()) return null;
+        this.socketPara = gson.fromJson(br, SocketPara.class);
+        return socketPara;
+    }
 }

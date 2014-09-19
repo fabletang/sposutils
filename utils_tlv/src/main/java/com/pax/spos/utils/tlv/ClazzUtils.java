@@ -4,12 +4,14 @@ import com.pax.spos.utils.ByteStringHex;
 import com.pax.spos.utils.tlv.model.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
  * author: fable tang
  * Comments: 用于归类 TLV, 服务于 TLVUtils
  * 对应tag.json 位于 com.pax.spos.utils 目录，jar包也可以，但是 目录优先
+ * tagjsonInputStream InputStream 用于 android读取 tag.json 配置
  * Create Date：2014-08-18
  * Modified By：
  * Modified Date:
@@ -20,10 +22,26 @@ public class ClazzUtils {
     private static int posClazz;
     private static int posFunc;
     private static int posPara;
+    private static InputStream tagjsonInputStream;
+
+    public static InputStream getTagjsonInputStream() {
+        return tagjsonInputStream;
+    }
+
+    public static void setTagjsonInputStream(InputStream tagjsonInputStream) {
+        ClazzUtils.tagjsonInputStream = tagjsonInputStream;
+    }
 
     public static TagJson getTagJson() {
         try {
-            return TagJsonUtils.getInstance().parseJson("tag.json");
+//            InputStream in = getResources().getAssets().open(fileName);
+            TagJson tagJson=null;
+            if (tagjsonInputStream ==null){
+                tagJson=TagJsonUtils.getInstance().parseJson("tag.json");
+            }else {
+                tagJson=TagJsonUtils.getInstance().parseJson(tagjsonInputStream);
+            }
+            return tagJson;
         } catch (IOException e) {
             e.printStackTrace();
         }

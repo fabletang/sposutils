@@ -610,9 +610,6 @@ public class EmvTLVUtils {
      * @return TLVs
      */
     public static List<EmvTLV> findByTag(int tag, List<EmvTLV> flatTLVs) {
-        if (tag<1) {
-            return null;
-        }
         if (flatTLVs == null || flatTLVs.size() < 1) {
             return null;
         }

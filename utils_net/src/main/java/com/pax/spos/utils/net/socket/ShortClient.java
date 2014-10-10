@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class ShortClient {
     //      private final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShortClient.class);
-    public static Logger LOGGER = Logger.getLogger("BytesEncoder");
+    public static Logger LOGGER = Logger.getLogger("ShortClient");
 
     private String host = "localhost";
     private int port = 3001;
@@ -39,7 +39,9 @@ public class ShortClient {
 
 
     public ShortClient() throws IOException {
-        this.socketPara = SocketClientUtil.getSocketPara();
+        //this.socketPara = SocketClientUtil.getSocketPara();
+        this.socketPara = SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
+        LOGGER.info("===="+socketPara);
         this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
         this.ioHandler = new BytesClientHandler();
         this.host = socketPara.getHost();
@@ -67,6 +69,7 @@ public class ShortClient {
         this.socketPara = socketPara;
      //   this.protocolCodecFilter = protocolCodecFilter;
         this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.ioHandler = new BytesClientHandler();
         this.host = socketPara.getHost();
         this.port = socketPara.getPort();
         this.timeout_r = socketPara.getTimeout_r();
@@ -86,8 +89,9 @@ public class ShortClient {
         // init();
     }
 
-    public ShortClient(String host, int port) {
-        this.socketPara = SocketClientUtil.getSocketPara();
+    public ShortClient(String host, int port) throws Exception{
+        this.socketPara = SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
+        //this.socketPara = SocketClientUtil.getSocketPara();
         this.ioHandler = new BytesClientHandler();
         //this.host = socketPara.getHost();
         //this.port = socketPara.getPort();
@@ -151,7 +155,7 @@ public class ShortClient {
     }
 
     private IoSession getSession() {
-        LOGGER.setLevel(Level.WARNING);
+       // LOGGER.setLevel(Level.WARNING);
         if (session != null && session.isConnected()) {
             return session;
         }
@@ -172,7 +176,7 @@ public class ShortClient {
             if (future.awaitUninterruptibly(timeout_c)) {
 
             } else {
-                LOGGER.warning("connect " + host + ":" + port + " timeout ms:" + timeout_c);
+                //LOGGER.warning("connect " + host + ":" + port + " timeout ms:" + timeout_c);
                 // future.cancel();
                 return null;
             }
@@ -180,15 +184,15 @@ public class ShortClient {
             long sessionId;
             if (session != null) {
                 sessionId = session.getId();
-                LOGGER.info("sessionId:" + sessionId + " connect succes:" + host + ":" + port);
+               // LOGGER.info("sessionId:" + sessionId + " connect succes:" + host + ":" + port);
                 return session;
             } else {
-                LOGGER.info("session fault for " + host + ":" + port);
+              //  LOGGER.info("session fault for " + host + ":" + port);
                 return null;
             }
 
         } catch (Exception e) {
-            LOGGER.warning(e.getMessage());
+          //  LOGGER.warning(e.getMessage());
             // clear();
             return null;
         }
@@ -196,12 +200,12 @@ public class ShortClient {
 
     public SocketBytes send(SocketBytes socketBytesSend) {
         if (socketBytesSend == null || socketBytesSend.getBytesContent() == null || socketBytesSend.getBytesContent().length < 1) {
-            LOGGER.warning("------- shortclient socketBytesSend 不合法 ----");
+            //LOGGER.warning("------- shortclient socketBytesSend 不合法 ----");
             return null;
         }
         session = getSession();
         if (session == null || !session.isConnected()) {
-            LOGGER.warning("------- shortclient socket 无法建立-----");
+          //  LOGGER.warning("------- shortclient socket 无法建立-----");
             socketBytesSend.setConnectTimeout(true);
             return socketBytesSend;
         }
@@ -239,7 +243,7 @@ public class ShortClient {
 //                    socketBytesReceived.setSendDate(socketBytesSend.getSendDate());
                     socketBytesReceived.setSendDate(sendDate);
                     socketBytesReceived.setReceiveDate(new Date());
-                    LOGGER.info("-- ShortClient-" + " socketBytesReceived:" + socketBytesReceived);
+                    //LOGGER.info("-- ShortClient-" + " socketBytesReceived:" + socketBytesReceived);
                     return socketBytesReceived;
                 }else {
                     socketBytesReceived=new SocketBytes();
@@ -248,7 +252,7 @@ public class ShortClient {
                 }
             }
         } catch (Exception e) {
-            LOGGER.warning("------- shortclient e: -----"+e.getMessage());
+            //LOGGER.warning("------- shortclient e: -----"+e.getMessage());
         } finally {
 //            session.close(true);
             clear();

@@ -32,6 +32,7 @@ public class SocketBytes {
 
     public SocketBytes() {
 //        this.sendDate = new Date();
+        this.isFitSocketPara=true;
     }
 
     @Override

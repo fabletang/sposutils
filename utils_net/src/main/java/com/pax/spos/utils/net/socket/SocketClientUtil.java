@@ -64,6 +64,7 @@ public class SocketClientUtil {
             destLen = socketPara.getHeadLenNum_out();
         }
         dest=getHeadBytesByLenType(len,destLen,lenType);
+        System.out.println("----- buildHeadBytes dest="+ByteStringHex.bytes2HexStr(dest));
 //        switch (lenType) {
 //            case "HEX": {
 //                dest = ByteStringHex.int2FixBytes(len, destLen);

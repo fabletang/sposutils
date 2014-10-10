@@ -14,7 +14,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Gradle: unresolved_dependency___junit_junit_4_12" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: junit-4.11" level="project" />
   </component>
 </module>
 

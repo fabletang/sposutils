@@ -30,7 +30,8 @@ public class BytesServerTest {
     private static SocketPara socketPara;
 //    @BeforeClass
     public static void main(String[] args) throws IOException {
-        socketPara= SocketClientUtil.getSocketPara();
+        //socketPara= SocketClientUtil.getSocketPara();
+        socketPara=SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
         IoAcceptor acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast( "logger", new LoggingFilter() );
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new BytesCodecFactory(true)));

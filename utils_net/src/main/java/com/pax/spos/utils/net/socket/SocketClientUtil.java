@@ -11,24 +11,45 @@ import java.io.InputStream;
  * Created by fable on 14-9-10.
  */
 public class SocketClientUtil {
-    public static InputStream socketParaInputSteam;
+    private static SocketPara socketPara;
 
-    public static InputStream getSocketParaInputSteam() {
-        return socketParaInputSteam;
+    public static void setSocketPara(SocketPara socketPara) {
+        SocketClientUtil.socketPara = socketPara;
     }
 
-    public static void setSocketParaInputSteam(InputStream socketParaInputSteam) {
-        SocketClientUtil.socketParaInputSteam = socketParaInputSteam;
+    public static SocketPara getSocketPara() {
+        return socketPara;
     }
+//    public static InputStream socketParaInputSteam;
+//
+//    public static InputStream getSocketParaInputSteam() {
+//        return socketParaInputSteam;
+//    }
 
-    public static SocketPara getSocketPara() throws IOException {
-        if (socketParaInputSteam==null){
-            return SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
-        }else{
-            return SocketParaJsonUtils.getInstance().parseJson(socketParaInputSteam);
+//    public static void setSocketParaInputSteam(InputStream socketParaInputSteam) {
+//        SocketClientUtil.socketParaInputSteam = socketParaInputSteam;
+//    }
+
+//    public static SocketPara getSocketPara() throws IOException {
+//        if (socketParaInputSteam==null){
+//            return SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
+//        }else{
+//            return SocketParaJsonUtils.getInstance().parseJson(socketParaInputSteam);
+//        }
+//    }
+    private static byte[] getHeadBytesByLenType(int len,int destLen,String lenType){
+        if (lenType==null||lenType.equals("")) return ByteStringHex.int2FixBytes(len, destLen);
+        if (lenType.equals("HEX")){
+            return  ByteStringHex.int2FixBytes(len, destLen);
         }
+        if (lenType.equals("BCD")){
+            return  ByteStringHex.int2FixBcd(len, destLen);
+        }
+        if (lenType.equals("ASC")){
+            return  ByteStringHex.int2FixAsc(len, destLen);
+        }
+        return null;
     }
-
     public static byte[] buildHeadBytes(int len, boolean isIn) throws IOException {
         SocketPara socketPara = getSocketPara();
         if (socketPara == null) return null;
@@ -42,22 +63,23 @@ public class SocketClientUtil {
             lenType = socketPara.getLenType_out();
             destLen = socketPara.getHeadLenNum_out();
         }
-        switch (lenType) {
-            case "HEX": {
-                dest = ByteStringHex.int2FixBytes(len, destLen);
-                break;
-            }
-            case "BCD": {
-                dest = ByteStringHex.int2FixBcd(len, destLen);
-                break;
-            }
-            case "ASC": {
-                dest = ByteStringHex.int2FixAsc(len, destLen);
-                break;
-            }
-            default:
-                dest = ByteStringHex.int2FixBytes(len, destLen);
-        }
+        dest=getHeadBytesByLenType(len,destLen,lenType);
+//        switch (lenType) {
+//            case "HEX": {
+//                dest = ByteStringHex.int2FixBytes(len, destLen);
+//                break;
+//            }
+//            case "BCD": {
+//                dest = ByteStringHex.int2FixBcd(len, destLen);
+//                break;
+//            }
+//            case "ASC": {
+//                dest = ByteStringHex.int2FixAsc(len, destLen);
+//                break;
+//            }
+//            default:
+//                dest = ByteStringHex.int2FixBytes(len, destLen);
+//        }
         return dest;
 
     }
@@ -77,24 +99,34 @@ public class SocketClientUtil {
         }
         byte[] tmp = new byte[headLen];
         System.arraycopy(bytes, 0, tmp, 0, headLen);
-        int dest;
-        switch (lenType) {
-            case "HEX": {
-                dest = ByteStringHex.bytes2Int(tmp);
-                break;
-            }
-            case "BCD": {
-                dest = ByteStringHex.bcd2Int(tmp);
-                break;
-            }
-            case "ASC": {
-                dest = ByteStringHex.asc2Int(tmp);
-                break;
-            }
-            default:
-                dest = ByteStringHex.bytes2Int(tmp);
-        }
+        int dest = 0;
+//        switch (lenType) {
+//            case "HEX": {
+//                dest = ByteStringHex.bytes2Int(tmp);
+//                break;
+//            }
+//            case "BCD": {
+//                dest = ByteStringHex.bcd2Int(tmp);
+//                break;
+//            }
+//            case "ASC": {
+//                dest = ByteStringHex.asc2Int(tmp);
+//                break;
+//            }
+//            default:
+//                dest = ByteStringHex.bytes2Int(tmp);
+//        }
 
+            if (lenType==null||lenType.equals("")) return ByteStringHex.bytes2Int(tmp);
+            if (lenType.equals("HEX")){
+                dest = ByteStringHex.bytes2Int(tmp);
+            }
+            if (lenType.equals("BCD")){
+                dest = ByteStringHex.bcd2Int(tmp);
+            }
+            if (lenType.equals("ASC")){
+                dest = ByteStringHex.asc2Int(tmp);
+            }
         return dest;
     }
 
@@ -118,7 +150,26 @@ public class SocketClientUtil {
      * @throws IOException
      */
     public static SocketBytes shortSend(SocketBytes socketBytesSend) throws IOException {
-        ShortClient shortClient = new ShortClient();
+        if (socketPara==null) return null;
+        ShortClient shortClient = new ShortClient(socketPara);
+        return shortClient.send(socketBytesSend);
+    }
+    public static SocketBytes shortSend(SocketBytes socketBytesSend,String host,int port) throws IOException {
+        if (socketPara==null) return null;
+        ShortClient shortClient = new ShortClient(host,port,socketPara);
+        return shortClient.send(socketBytesSend);
+    }
+
+    public static SocketBytes shortSend(SocketBytes socketBytesSend,SocketPara socketPara) throws IOException {
+        setSocketPara(socketPara);
+        if (socketPara==null) return null;
+        ShortClient shortClient = new ShortClient(socketPara);
+        return shortClient.send(socketBytesSend);
+    }
+    public static SocketBytes shortSend(SocketBytes socketBytesSend,String host,int port,SocketPara socketPara) throws IOException {
+        setSocketPara(socketPara);
+        if (socketPara==null) return null;
+        ShortClient shortClient = new ShortClient(host,port,socketPara);
         return shortClient.send(socketBytesSend);
     }
 }

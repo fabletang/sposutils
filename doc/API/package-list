@@ -1,1 +1,3 @@
-com.pax.spos.utils.net.http
+com.pax.spos.utils.net.socket
+com.pax.spos.utils.net.socket.codec
+com.pax.spos.utils.net.socket.model

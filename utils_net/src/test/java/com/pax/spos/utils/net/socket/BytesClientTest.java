@@ -17,13 +17,13 @@ import java.util.logging.Logger;
 public class BytesClientTest {
     private static ShortClient shortClient;
     public Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    @BeforeClass
+    //@BeforeClass
     public static void init() throws IOException {
        BytesServerTest.getInstance();
         shortClient=new ShortClient();
         assertNotNull(shortClient);
     }
-    @Test
+    //@Test
     public void check() throws Exception{
         SocketBytes socketBytes=new SocketBytes();
         String hexStr="010203040506";

@@ -63,7 +63,18 @@ public class ShortClient {
         // init();
     }
 
-    public ShortClient(SocketPara socketPara, ProtocolCodecFilter protocolCodecFilter, IoHandler ioHandler) {
+ public ShortClient(SocketPara socketPara) {
+        this.socketPara = socketPara;
+     //   this.protocolCodecFilter = protocolCodecFilter;
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.host = socketPara.getHost();
+        this.port = socketPara.getPort();
+        this.timeout_r = socketPara.getTimeout_r();
+        this.timeout_w = socketPara.getTimeout_w();
+        this.timeout_c = socketPara.getTimeout_c();
+        // init();
+    }
+   public ShortClient(SocketPara socketPara, ProtocolCodecFilter protocolCodecFilter, IoHandler ioHandler) {
         this.socketPara = socketPara;
         this.protocolCodecFilter = protocolCodecFilter;
         this.ioHandler = ioHandler;
@@ -76,13 +87,35 @@ public class ShortClient {
     }
 
     public ShortClient(String host, int port) {
+        this.socketPara = SocketClientUtil.getSocketPara();
+        this.ioHandler = new BytesClientHandler();
+        //this.host = socketPara.getHost();
+        //this.port = socketPara.getPort();
+        this.timeout_r = socketPara.getTimeout_r();
+        this.timeout_w = socketPara.getTimeout_w();
+        this.timeout_c = socketPara.getTimeout_c();
+
         this.host = host;
         this.port = port;
-        protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
         // init();
 
     }
 
+    public ShortClient(String host, int port,SocketPara socketPara) {
+        this.ioHandler = new BytesClientHandler();
+        //this.host = socketPara.getHost();
+        //this.port = socketPara.getPort();
+        this.timeout_r = socketPara.getTimeout_r();
+        this.timeout_w = socketPara.getTimeout_w();
+        this.timeout_c = socketPara.getTimeout_c();
+
+        this.host = host;
+        this.port = port;
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        // init();
+
+    }
     public ShortClient(String host, int port, ProtocolCodecFilter protocolCodecFilter) {
         this.host = host;
         this.port = port;

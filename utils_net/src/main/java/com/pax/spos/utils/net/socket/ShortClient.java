@@ -37,19 +37,27 @@ public class ShortClient {
     private SocketPara socketPara;
     private IoHandler ioHandler;
 
+    public IoHandler getIoHandler() {
+        return ioHandler;
+    }
+
+    public void setIoHandler(IoHandler ioHandler) {
+        this.ioHandler = ioHandler;
+    }
 
     public ShortClient() throws IOException {
         //this.socketPara = SocketClientUtil.getSocketPara();
         this.socketPara = SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
         LOGGER.info("===="+socketPara);
         this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
-        this.ioHandler = new BytesClientHandler();
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
         this.host = socketPara.getHost();
         this.port = socketPara.getPort();
         this.timeout_r = socketPara.getTimeout_r();
         this.timeout_w = socketPara.getTimeout_w();
         this.timeout_c = socketPara.getTimeout_c();
-
 //        this.session=getSession();
         // init();
     }
@@ -62,6 +70,9 @@ public class ShortClient {
         this.timeout_r = socketPara.getTimeout_r();
         this.timeout_w = socketPara.getTimeout_w();
         this.timeout_c = socketPara.getTimeout_c();
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
         // init();
     }
 
@@ -69,7 +80,21 @@ public class ShortClient {
         this.socketPara = socketPara;
      //   this.protocolCodecFilter = protocolCodecFilter;
         this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
-        this.ioHandler = new BytesClientHandler();
+     if (this.ioHandler==null) {
+         this.ioHandler = new BytesClientHandler();
+     }
+        this.host = socketPara.getHost();
+        this.port = socketPara.getPort();
+        this.timeout_r = socketPara.getTimeout_r();
+        this.timeout_w = socketPara.getTimeout_w();
+        this.timeout_c = socketPara.getTimeout_c();
+        // init();
+    }
+    public ShortClient(SocketPara socketPara,IoHandler ioHandler) {
+        this.socketPara = socketPara;
+        //   this.protocolCodecFilter = protocolCodecFilter;
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.ioHandler = ioHandler;
         this.host = socketPara.getHost();
         this.port = socketPara.getPort();
         this.timeout_r = socketPara.getTimeout_r();
@@ -92,7 +117,9 @@ public class ShortClient {
     public ShortClient(String host, int port) throws Exception{
         this.socketPara = SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
         //this.socketPara = SocketClientUtil.getSocketPara();
-        this.ioHandler = new BytesClientHandler();
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
         //this.host = socketPara.getHost();
         //this.port = socketPara.getPort();
         this.timeout_r = socketPara.getTimeout_r();
@@ -107,7 +134,9 @@ public class ShortClient {
     }
 
     public ShortClient(String host, int port,SocketPara socketPara) {
-        this.ioHandler = new BytesClientHandler();
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
         //this.host = socketPara.getHost();
         //this.port = socketPara.getPort();
         this.timeout_r = socketPara.getTimeout_r();
@@ -124,6 +153,9 @@ public class ShortClient {
         this.host = host;
         this.port = port;
         this.protocolCodecFilter = protocolCodecFilter;
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
         // init();
     }
 
@@ -134,6 +166,9 @@ public class ShortClient {
         this.timeout_r = timeout_r;
         this.timeout_w = timeout_w;
         this.timeout_c = timeout_w;
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
         //  init();
     }
 
@@ -152,6 +187,9 @@ public class ShortClient {
         this.timeout_r = timeout_r;
         this.timeout_w = timeout_w;
         this.timeout_c = timeout_c;
+        if (this.ioHandler==null) {
+            this.ioHandler = new BytesClientHandler();
+        }
     }
 
     private IoSession getSession() {

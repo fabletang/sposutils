@@ -54,15 +54,19 @@ public class HttpClientUtil {
     public static HttpPara httpPara;
     public static RequestConfig requestConfig;
 
-    public static InputStream httpParaInputSteam;
-
-    public static InputStream getHttpParaInputSteam() {
-        return httpParaInputSteam;
+    public static void setHttpPara(HttpPara httpPara) {
+        HttpClientUtil.httpPara = httpPara;
     }
 
-    public static void setHttpParaInputSteam(InputStream httpParaInputSteam) {
-        HttpClientUtil.httpParaInputSteam = httpParaInputSteam;
-    }
+//    public static InputStream httpParaInputSteam;
+//
+//    public static InputStream getHttpParaInputSteam() {
+//        return httpParaInputSteam;
+//    }
+//
+//    public static void setHttpParaInputSteam(InputStream httpParaInputSteam) {
+//        HttpClientUtil.httpParaInputSteam = httpParaInputSteam;
+//    }
 
     /**
      * 得到并设置http连接参数，如果httpPara==null或者timeout_c==0, timeout_c=5秒, timeout_r=10秒
@@ -71,11 +75,11 @@ public class HttpClientUtil {
      */
     public static HttpPara getHttpPara() throws IOException {
         if (httpPara==null){
-            if (httpParaInputSteam==null){
-                httpPara=HttpParaJsonUtils.getInstance().parseJson("HttpPara.json");
-            }else{
-                httpPara=HttpParaJsonUtils.getInstance().parseJson(httpParaInputSteam);
-            }
+//            if (httpParaInputSteam==null){
+//                httpPara=HttpParaJsonUtils.getInstance().parseJson("HttpPara.json");
+//            }else{
+//                httpPara=HttpParaJsonUtils.getInstance().parseJson(httpParaInputSteam);
+//            }
             if (httpPara==null || httpPara.getTimeout_c()==0){
                 timeout_c=5000;
             }else {
@@ -110,7 +114,9 @@ public class HttpClientUtil {
             httpBytes.setSendDate(sendDate);
             HttpGet httpGet = new HttpGet(httpBytes.getReqUrl());
             if(requestConfig==null){httpPara=getHttpPara();}
-            httpGet.setConfig(requestConfig);
+            if (requestConfig!=null) {
+                httpGet.setConfig(requestConfig);
+            }
 
             CloseableHttpResponse response1 = httpclient.execute(httpGet);
             // The underlying HTTP connection is still held by the response object

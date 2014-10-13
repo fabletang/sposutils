@@ -3,6 +3,7 @@ package com.pax.spos.utils.net.socket;
 import com.pax.spos.utils.ByteStringHex;
 import com.pax.spos.utils.net.socket.model.SocketBytes;
 import com.pax.spos.utils.net.socket.model.SocketPara;
+import org.apache.mina.core.service.IoHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -161,6 +162,17 @@ public class SocketClientUtil {
         return shortClient.send(socketBytesSend);
     }
 
+    public static SocketBytes shortSend(SocketBytes socketBytesSend,IoHandler ioHandler) throws IOException {
+        if (socketPara==null || ioHandler==null) return null;
+        ShortClient shortClient = new ShortClient(socketPara,ioHandler);
+        return shortClient.send(socketBytesSend);
+    }
+    public static SocketBytes shortSend(SocketBytes socketBytesSend,String host,int port,IoHandler ioHandler) throws IOException {
+        if (socketPara==null || ioHandler==null) return null;
+        ShortClient shortClient = new ShortClient(host,port,socketPara);
+        shortClient.setIoHandler(ioHandler);
+        return shortClient.send(socketBytesSend);
+    }
     public static SocketBytes shortSend(SocketBytes socketBytesSend,SocketPara socketPara) throws IOException {
         setSocketPara(socketPara);
         if (socketPara==null) return null;

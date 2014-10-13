@@ -25,28 +25,6 @@ public class BytesClientHandler extends IoHandlerAdapter {
 //        socketBytes = (SocketBytes) message;
 //        socketBytes.setSendDate(new Date());
 //        byte[] dest = socketBytes.getBytesContent();
-//        dest[0] = (byte) (0x11);
-//        socketBytes.setBytesContent(dest);
-//        session.write(socketBytes);
-//        System.out.println("Client send 消息:" + socketBytes);
-//        IoBuffer bbuf = (IoBuffer) message;
-//        byte[] byten = new byte[bbuf.limit()];
-//        bbuf.get(byten, bbuf.position(), bbuf.limit());
-//        System.out.println("收到消息：" + ByteStringHex.bytes2HexStr(byten));
-//        byte[] bts = new byte[10];
-//        for(int i=0;i<10;i++){
-//            bts[i] = (byte)i;
-//        }
-//        IoBuffer buffer = IoBuffer.allocate(10);
-//        buffer.put(bts);
-//        buffer.flip();
-//        session.write(buffer);
-//      // 拿到所有的客户端Session
-//      Collection<IoSession> sessions = session.getService().getManagedSessions().values();
-//      // 向所有客户端发送数据
-//      for (IoSession sess : sessions) {
-//          sess.write(buffer);
-//      }
     }
 
     @Override

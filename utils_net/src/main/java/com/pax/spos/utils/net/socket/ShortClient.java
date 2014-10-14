@@ -49,7 +49,7 @@ public class ShortClient {
         //this.socketPara = SocketClientUtil.getSocketPara();
         this.socketPara = SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
         LOGGER.info("===="+socketPara);
-        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false,socketPara));
         if (this.ioHandler==null) {
             this.ioHandler = new BytesClientHandler();
         }
@@ -79,7 +79,7 @@ public class ShortClient {
  public ShortClient(SocketPara socketPara) {
         this.socketPara = socketPara;
      //   this.protocolCodecFilter = protocolCodecFilter;
-        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false,socketPara));
      if (this.ioHandler==null) {
          this.ioHandler = new BytesClientHandler();
      }
@@ -93,7 +93,7 @@ public class ShortClient {
     public ShortClient(SocketPara socketPara,IoHandler ioHandler) {
         this.socketPara = socketPara;
         //   this.protocolCodecFilter = protocolCodecFilter;
-        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false,socketPara));
         this.ioHandler = ioHandler;
         this.host = socketPara.getHost();
         this.port = socketPara.getPort();
@@ -128,7 +128,7 @@ public class ShortClient {
 
         this.host = host;
         this.port = port;
-        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false,socketPara));
         // init();
 
     }
@@ -145,7 +145,7 @@ public class ShortClient {
 
         this.host = host;
         this.port = port;
-        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false));
+        this.protocolCodecFilter = new ProtocolCodecFilter(new BytesCodecFactory(false,socketPara));
         // init();
 
     }
@@ -245,6 +245,7 @@ public class ShortClient {
         if (session == null || !session.isConnected()) {
           //  LOGGER.warning("------- shortclient socket 无法建立-----");
             socketBytesSend.setConnectTimeout(true);
+            socketBytesSend.setBytesContent(null);
             return socketBytesSend;
         }
         SocketBytes socketBytesReceived=null;
@@ -265,7 +266,8 @@ public class ShortClient {
                     socketBytesReceived=new SocketBytes();
                     socketBytesReceived.setReadTimeout(true);
                     socketBytesReceived.setSendDate(sendDate);
-                    return null;
+                    socketBytesReceived.setBytesContent(null);
+                    return socketBytesReceived;
                 }
 
                 ReadFuture readFuture;
@@ -287,6 +289,7 @@ public class ShortClient {
                     socketBytesReceived=new SocketBytes();
                     socketBytesReceived.setSendDate(socketBytesSend.getSendDate());
                     socketBytesReceived.setReadTimeout(true);
+                    socketBytesReceived.setBytesContent(null);
                 }
             }
         } catch (Exception e) {

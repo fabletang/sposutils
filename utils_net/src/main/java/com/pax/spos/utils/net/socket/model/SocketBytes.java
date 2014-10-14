@@ -39,13 +39,13 @@ public class SocketBytes {
     public String toString() {
         return "socketBytes{" +
                 " isFitSocketPara=" + isFitSocketPara +
-                " isConnectTimeout=" + isConnectTimeout+
-                " isReadTimeout=" + isReadTimeout+
-                " isWriteTimeout=" + isWriteTimeout +
-                ", bytesLen=" + bytesLen +
-                ", bytesContent=" + Arrays.toString(bytesContent) + "\n" +
-                ", bytesContent_HEX=" + ByteStringHex.bytes2HexStr(bytesContent) +
-                ", sendDate=" + formatDate(sendDate) +
+                " isConnectTimeout=" + isConnectTimeout+ '\'' +
+                " isReadTimeout=" + isReadTimeout+ '\'' +
+                " isWriteTimeout=" + isWriteTimeout + '\'' +
+                ", bytesLen=" + bytesLen + '\'' +
+//                ", bytesContent=" + Arrays.toString(bytesContent) + "\n" +
+                ", bytesContent_HEX=" + ByteStringHex.bytes2HexStr(bytesContent) +'\'' +
+                ", sendDate=" + formatDate(sendDate) +'\'' +
                 ", receiveDate=" + formatDate(receiveDate) +
 //                ", receiveDate=" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss-SSS").format(receiveDate) +
                 '}';

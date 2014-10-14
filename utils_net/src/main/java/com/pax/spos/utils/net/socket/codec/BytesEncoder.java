@@ -19,9 +19,11 @@ public class BytesEncoder implements ProtocolEncoder {
     //     private final static Logger LOGGER = LoggerFactory.getLogger(MReqEncoder.class);
     public static Logger LOGGER = Logger.getLogger("BytesEncoder");
     private boolean isServer;
+    private SocketPara socketPara;
 
-    public BytesEncoder(boolean isServer) {
+    public BytesEncoder(boolean isServer,SocketPara socketPara) {
         this.isServer = isServer;
+        this.socketPara=socketPara;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class BytesEncoder implements ProtocolEncoder {
 
         byte[] bytesOut;
         if (socketBytes.isFitSocketPara()) {
-            SocketPara socketPara = SocketClientUtil.getSocketPara();
+//            SocketPara socketPara = SocketClientUtil.getSocketPara();
             if (socketPara == null) return;
             int bytesContentLen = socketBytes.getBytesContent().length;
             if (bytesContentLen < 1) return;

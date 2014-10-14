@@ -34,7 +34,7 @@ public class BytesServerTest {
         socketPara=SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
         IoAcceptor acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast( "logger", new LoggingFilter() );
-        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new BytesCodecFactory(true)));
+        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new BytesCodecFactory(true,socketPara)));
         acceptor.setHandler(new BytesServerHandler());
         acceptor.getSessionConfig().setReadBufferSize( 2048 );
         acceptor.getSessionConfig().setIdleTime( IdleStatus.BOTH_IDLE, 5000 );

@@ -6,12 +6,11 @@ import com.pax.spos.utils.net.socket.model.SocketPara;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by fable on 14-9-11.
@@ -65,5 +64,28 @@ public class BytesClientTest {
         LOGGER.info("receive 3:"+socketBytesReceived);
 
     }
+     @Test
+    public void checkTimeout() throws Exception{
+
+         SocketPara socketPara = SocketParaJsonUtils.getInstance().parseJson("SocketPara.json");
+
+         assertNotNull(socketPara);
+         System.out.println("ByteClientTest. socketPara=" + socketPara);
+         socketPara.setPort(111);
+         shortClient=new ShortClient(socketPara);
+         assertNotNull(shortClient);
+
+         SocketBytes socketBytes=new SocketBytes();
+         String hexStr="010203040506";
+         byte[] bytesSend= ByteStringHex.hexStr2Bytes(hexStr);
+         socketBytes.setBytesContent(bytesSend);
+         socketBytes.setFitSocketPara(true);
+         LOGGER.info("send 1:"+socketBytes.toString());
+         //SocketBytes socketBytesReceived=shortClient.send(socketBytes);
+         SocketBytes socketBytesReceived=SocketClientUtil.shortSend(socketBytes,socketPara);
+         LOGGER.info("receive 1:"+socketBytesReceived);
+         assertNotNull(socketBytesReceived);
+         assertTrue(socketBytesReceived.isConnectTimeout());
+     }
 
 }

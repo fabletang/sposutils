@@ -1,5 +1,6 @@
 package com.pax.spos.utils.net.socket.codec;
 
+import com.pax.spos.utils.net.socket.model.SocketPara;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
@@ -13,9 +14,9 @@ public class BytesCodecFactory implements ProtocolCodecFactory {
     private ProtocolDecoder decoder;
 
 
-    public BytesCodecFactory(boolean isServer) {
-        encoder = new BytesEncoder(isServer);
-        decoder = new BytesDecoder(isServer);
+    public BytesCodecFactory(boolean isServer,SocketPara socketPara) {
+        encoder = new BytesEncoder(isServer,socketPara);
+        decoder = new BytesDecoder(isServer,socketPara);
     }
 
     public ProtocolEncoder getEncoder(IoSession ioSession) throws Exception {

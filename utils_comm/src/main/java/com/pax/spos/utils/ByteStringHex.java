@@ -156,7 +156,33 @@ public class ByteStringHex {
     }
 
     /**
-     * 单个字节转为16进制字符串 自动补0
+     * 把字节数组转换成16进制字符串,字母为大写
+     *
+     * @param bytes byte[]
+     * @return String 16进制字符串 hexString
+     */
+    public static String bytes2HexStrNull(byte[] bytes) {
+        if (bytes == null) {
+            return "NULL";
+        }
+        int len = bytes.length;
+        if (len < 1) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder(len);
+        String sTemp;
+        for (byte aByte : bytes) {
+            sTemp = Integer.toHexString(0xFF & aByte);
+            if (sTemp.length() < 2) {
+                sb.append(0);
+            }
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 单个字节转为16进制字符串 自动补0, null 转为NULL
      *
      * @param bit8
      * @return hexStr

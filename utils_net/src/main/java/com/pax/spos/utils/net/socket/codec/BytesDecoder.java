@@ -20,9 +20,11 @@ import java.util.logging.Logger;
 public class BytesDecoder extends CumulativeProtocolDecoder {
     public static Logger LOGGER = Logger.getLogger("BytesDecoder");
     private boolean isServer;
+    private SocketPara socketPara;
 
-    public BytesDecoder(boolean isServer) {
+    public BytesDecoder(boolean isServer,SocketPara socketPara) {
         this.isServer = isServer;
+        this.socketPara=socketPara;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class BytesDecoder extends CumulativeProtocolDecoder {
             return false;
         }
         LOGGER.info("doDecode isServer:" + isServer + " inBytes=" + ByteStringHex.bytes2HexStr(buf));
-        SocketPara socketPara = SocketClientUtil.getSocketPara();
+//        SocketPara socketPara = SocketClientUtil.getSocketPara();
         if (socketPara == null) return false;
         int headLen;
         if (isServer) {

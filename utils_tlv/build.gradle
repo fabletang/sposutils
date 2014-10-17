@@ -1,11 +1,12 @@
 apply plugin: 'java'
-apply plugin: 'maven-publish'
+//apply plugin: 'maven-publish'
 apply plugin: 'maven'
 sourceCompatibility = 1.6
 /*version = '1.9'*/
 group = "com.pax.spos" 
 /*artifactId ='D800_SDK'*/
-version = "1.9.0-SNAPSHOT" 
+version = "1.9.1" 
+//version = "1.9.0-SNAPSHOT" 
 /*version = "1.9.0-release" */
 
 repositories {
@@ -31,13 +32,33 @@ dependencies {
 
 compileJava.dependsOn 'copyConf'
 /*uploadArchives.dependsOn 'copyLibs'*/
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs '../repos'
-       }
+ uploadArchives {
+        repositories {
+            mavenDeployer {
+                pom.groupId = "com.pax.d800"
+                //pom.artifactId = "spos-core"
+                //pom.version = "1.0.4-SNAPSHOT"
+                pom.version = version+"-SNAPSHOT"
+                //pom.version = "1.0.2"
+                snapshotRepository(url: "http://192.168.8.9:10092/nexus/content/repositories/snapshots/") {
+                    authentication(userName: "paxdeploy", password: "paxsh")
+                //uniqueVersion=false
+                }
+            }
+        }
     }
-    }
+configurations {
+  archives {
+    extendsFrom configurations.default
+  }
+}
+/*uploadArchives {*/
+    /*repositories {*/
+       /*flatDir {*/
+           /*dirs '../repos'*/
+       /*}*/
+    /*}*/
+    /*}*/
 /*uploadArchives {*/
         /*repositories {*/
             /*mavenDeployer {*/
@@ -50,24 +71,20 @@ uploadArchives {
             /*}*/
         /*}*/
     /*}*/
-publishing { 
-    publications { 
-        mavenJava(MavenPublication) { 
-            from components.java 
-
-            /*artifact sourceJar { */
-                /*classifier "sources" */
+/*publishing { */
+    /*publications { */
+        /*mavenJava(MavenPublication) { */
+            /*from components.java */
+        /*} */
+    /*} */
+    /*repositories { */
+        /*maven { */
+            /*credentials { */
+              /*username 'paxdeploy' */
+              /*password 'paxsh' */
             /*} */
-        } 
-    } 
-    repositories { 
-        maven { 
-            credentials { 
-              username 'paxdeploy' 
-              password 'paxsh' 
-            } 
-            url "http://192.168.8.9:10092/nexus/content/repositories/snapshots"  
-            /*url "http://192.168.8.9:10092/nexus/content/repositories/release"  */
-        } 
-    } 
-} 
+            /*url "http://192.168.8.9:10092/nexus/content/repositories/snapshots"  */
+            /*[>url "http://192.168.8.9:10092/nexus/content/repositories/release"  <]*/
+        /*} */
+    /*} */
+/*} */

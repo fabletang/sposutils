@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 sourceCompatibility = 1.6
 version = '1.3'
 //apply plugin: 'android'
@@ -24,11 +25,31 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 compileJava.dependsOn 'copyConf'
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs '../repos'
-       }
-    }
-}
+/*uploadArchives {*/
+    /*repositories {*/
+       /*flatDir {*/
+           /*dirs '../repos'*/
+       /*}*/
+    /*}*/
+/*}*/
 
+ uploadArchives {
+        repositories {
+            mavenDeployer {
+                pom.groupId = "com.pax.d800"
+                //pom.artifactId = "spos-core"
+                //pom.version = "1.0.4-SNAPSHOT"
+                pom.version = version+"-SNAPSHOT"
+                //pom.version = "1.0.2"
+                snapshotRepository(url: "http://192.168.8.9:10092/nexus/content/repositories/snapshots/") {
+                    authentication(userName: "paxdeploy", password: "paxsh")
+                //uniqueVersion=false
+                }
+            }
+        }
+    }
+configurations {
+  archives {
+    extendsFrom configurations.default
+  }
+}

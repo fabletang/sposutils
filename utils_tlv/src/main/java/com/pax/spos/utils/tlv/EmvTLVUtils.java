@@ -422,7 +422,7 @@ public class EmvTLVUtils {
 //        System.out.println("parseTLVs. tlv.getvalue="+ tlv);
     }
 
-    private static List<EmvTLV> bytes2FlatTLVs(byte[] bytes) {
+    public static List<EmvTLV> bytes2FlatTLVs(byte[] bytes) {
 //        System.out.println("bytes2FlatTLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
         if (bytes == null || bytes.length < 2) {
             return null;
@@ -621,5 +621,52 @@ public class EmvTLVUtils {
         }
         if (items.size()==0){return null;}
         return items;
+    }
+
+    /**
+     * 删除函数 根据tag int 查找,
+     *
+     * @param tag
+     * @param flatTLVs 由 byte2FlatTLVs 得到
+     * @return TLVs
+     */
+    private static List<EmvTLV> removeByTag(int tag, List<EmvTLV> flatTLVs) {
+        if (flatTLVs == null || flatTLVs.size() < 1) {
+            return null;
+        }
+        List<EmvTLV> items = new ArrayList<EmvTLV>();
+        for (EmvTLV tlv : flatTLVs) {
+            if (tag != tlv.getTag()) {
+                items.add(tlv);
+            }
+        }
+        if (items.size()==0){return null;}
+        return items;
+    }
+    private static byte[] flatTLVs2Bytes(List<EmvTLV> flatTLVs) {
+//        System.out.println("--TLV2Bytes flatTLVs size=" + flatTLVs.size());
+        if (flatTLVs == null || flatTLVs.size() < 1) {
+            return null;
+        }
+        //byte[] dest = new byte[0];
+        ArrayList<Byte> dest = new ArrayList<Byte>();
+//        byte[] dest = new byte[0];
+        int sonsLen = 0;
+        dest = parseTLVs(flatTLVs, dest, sonsLen);
+//        parseTLVs(flatTLVs, dest, sonsLen);
+        return ByteStringHex.ArrayBytes2Bytes(dest);
+    }
+
+    /**
+     * 从byte[] 剔除 指定Tag的TLV
+     * @param tag int
+     * @param tlvBytes tlv字节流
+     * @return byte[] tlv 字节流
+     */
+    public static byte[] removeTag(int tag,byte[] tlvBytes) {
+        List<EmvTLV> flatTLVs=bytes2FlatTLVs(tlvBytes);
+        if (flatTLVs==null||flatTLVs.size()<1)return null;
+        List<EmvTLV> tmp= removeByTag(tag,flatTLVs);
+        return flatTLVs2Bytes(tmp);
     }
 }

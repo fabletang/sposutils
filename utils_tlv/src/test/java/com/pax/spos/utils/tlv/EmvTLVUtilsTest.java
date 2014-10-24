@@ -271,11 +271,27 @@ public class EmvTLVUtilsTest {
         String str="9F 5D 06 00 00 00 00 00 78 57 13 62 17 00 18 20 00 73 35 49 4D 23 02 62 01 89 10 20 00 0F 9F 37 04 05 13 74 46 82 02 7C 00 9F 34 00 9F 33 03 E0 E1 C8 9F 10 08 07 01 01 03 90 00 00 01";
          byte[] test = ByteStringHex.hexStr2Bytes(str);
         List<EmvTLV> res = EmvTLVUtils.bytes2NestedFlatTLVs(test);
-        System.out.println("------------------------------------");
-        System.out.println(res);
+        //System.out.println("------------------------------------");
+        //System.out.println(res);
         List<EmvTLV> res57=EmvTLVUtils.findByTag(0x57,res);
-        System.out.println("0x57="+res57);
-        System.out.println("0x57 value="+ByteStringHex.bytes2HexStr(res57.get(0).getValue()));
-        System.out.println("------------------------------------");
+        //System.out.println("0x57="+res57);
+        //System.out.println("0x57 value="+ByteStringHex.bytes2HexStr(res57.get(0).getValue()));
+        //System.out.println("------------------------------------");
+    }
+    @Test
+    public void testremoveTag(){
+        String str="9F 5D 06 00 00 00 00 00 78 57 13 62 17 00 18 20 00 73 35 49 4D 23 02 62 01 89 10 20 00 0F 9F 37 04 05 13 74 46 82 02 7C 00 9F 34 00 9F 33 03 E0 E1 C8 9F 10 08 07 01 01 03 90 00 00 01";
+        byte[] test = ByteStringHex.hexStr2Bytes(str);
+        List<EmvTLV> res = EmvTLVUtils.bytes2NestedFlatTLVs(test);
+       // System.out.println("------------------------------------");
+//        System.out.println(res.size());
+       byte[] tmp=EmvTLVUtils.removeTag(0x57,test);
+        List<EmvTLV> res2 = EmvTLVUtils.bytes2NestedFlatTLVs(tmp);
+        assertEquals(1,res.size()-res2.size());
+
+//        System.out.println(res2.size());
+//        System.out.println("------------------------------------");
+        List<EmvTLV> res57=EmvTLVUtils.findByTag(0x57,res2);
+        assertNull(res57);
     }
 }

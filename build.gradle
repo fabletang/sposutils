@@ -19,10 +19,8 @@ defaultTasks 'clean,build'
 
 repositories {
   // mavenLocal()
-    maven {
-        url "http://192.168.8.9:10092/nexus/content/groups/public/"
-    }
-    /*mavenCentral()*/
+    //maven { url "http://192.168.8.9:10092/nexus/content/groups/public/" }
+    mavenCentral()
 }
 test {
     systemProperties 'property': 'value'

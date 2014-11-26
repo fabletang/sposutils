@@ -4,7 +4,7 @@ sourceCompatibility = 1.6
 group = "com.pax.spos"
 /*artifactId ='D800_SDK'*/
 //name = "utils_tlv"
-version = "1.9.4"
+version = "1.9.5"
 buildscript{
 repositories {
     //mavenCentral()
@@ -23,16 +23,20 @@ dependencies {
 }
 
 task proguard(type: proguard.gradle.ProGuardTask,dependsOn:jar) {
+    //printmapping 'proguard.map'
     overloadaggressively
+    //repackageclasses ''
+    allowaccessmodification
     injars  "build/libs/${project.name}-${version}.jar"
     outjars  "build/libs/${project.name}-${version}-proguard.jar"
     configuration 'proguard.pro'
+    //keep 'public class com.pax.* {public *; }'
 }
 
-task delOriginJar(type: Delete,dependsOn: proguard) {
+task proguardJar(type: Delete,dependsOn: proguard) {
   delete "build/libs/${project.name}-${version}.jar"
-    doLast {
-   file("build/libs/${project.name}-${version}-proguard.jar").renameTo("build/libs/${project.name}-${version}.jar")
+  doLast {
+    file("build/libs/${project.name}-${version}-proguard.jar").renameTo("build/libs/${project.name}-${version}.jar")
    }
 }
 
@@ -60,7 +64,7 @@ compileJava.dependsOn 'copyConf'
 			/*dependsOn delOriginJar*/
 		/*}*/
 uploadArchives {
-			dependsOn delOriginJar
+        dependsOn proguardJar
         repositories {
 //if (version.endsWith("-proguard")) { }
             mavenDeployer {

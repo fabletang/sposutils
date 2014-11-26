@@ -669,4 +669,42 @@ public class EmvTLVUtils {
         List<EmvTLV> tmp= removeByTag(tag,flatTLVs);
         return flatTLVs2Bytes(tmp);
     }
+     public static byte[] removeTag(EmvTLV emvTLV,byte[] tlvBytes) {
+        if (emvTLV==null) return tlvBytes;
+        return removeTag(emvTLV.getTag(),tlvBytes);
+    }
+    /**
+     *  添加一个EmvTLV 到byte[]
+     * @param emvTLV
+     * @param tlvBytes tlv字节流
+     * @return byte[] tlv 字节流
+     */
+    public static byte[] addEmvTLV(EmvTLV emvTLV,byte[] tlvBytes) {
+        if (tlvBytes==null || tlvBytes.length<2) return tlvBytes;
+        if (emvTLV==null) return tlvBytes;
+        List<EmvTLV> flatTLVs=bytes2FlatTLVs(tlvBytes);
+        flatTLVs.add(emvTLV);
+        return flatTLVs2Bytes(flatTLVs);
+    }
+
+    /**
+     * 根据emvTLV的tag查找，修改 bytes的值,如果有重复的tag,所有的value 都会修改。
+     * @param emvTLV
+     * @param tlvBytes
+     * @return byte[]
+     */
+    public static byte[] modifyByTag(EmvTLV emvTLV,byte[] tlvBytes) {
+        if (emvTLV==null||emvTLV.getValue()==null) return tlvBytes;
+        if (tlvBytes==null || tlvBytes.length<2) return null;
+
+        List<EmvTLV> flatTLVs=bytes2FlatTLVs(tlvBytes);
+        if (flatTLVs==null||flatTLVs.size()<1)return null;
+        for (EmvTLV tlv:flatTLVs){
+           if (emvTLV.getTag()== tlv.getTag()){
+               tlv.setValue(emvTLV.getValue());
+           }
+        }
+        return flatTLVs2Bytes(flatTLVs);
+    }
+
 }

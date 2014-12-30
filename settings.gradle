@@ -1,3 +1,5 @@
 include 'utils_comm'
 include 'utils_tlv'
 include 'utils_net'
+include 'httpclient_core_android'
+include 'httpclient_android'

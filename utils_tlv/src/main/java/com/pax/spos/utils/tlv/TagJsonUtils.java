@@ -28,7 +28,7 @@ public class TagJsonUtils {
     }
 
     public TagJson parseJson(String tagjsonPath) throws IOException {
-        if (tagJson!=null) return tagJson;
+        if (tagJson != null) return tagJson;
         if (tagjsonPath == null || tagjsonPath.length() < 6 || !tagjsonPath.endsWith(".json")) {
             return null;
         }
@@ -42,7 +42,7 @@ public class TagJsonUtils {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         Gson gson = new Gson();
         if (!br.ready()) return null;
-        this.tagJson=gson.fromJson(br, TagJson.class);
+        this.tagJson = gson.fromJson(br, TagJson.class);
         return tagJson;
     }
 
@@ -55,14 +55,14 @@ public class TagJsonUtils {
      */
     public TagJson parseJson(InputStream tagjson) throws IOException {
 
-        if (tagJson!=null) return tagJson;
-        if (tagjson == null || tagjson.available() < 6 ) {
+        if (tagJson != null) return tagJson;
+        if (tagjson == null || tagjson.available() < 6) {
             return null;
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(tagjson));
         Gson gson = new Gson();
         if (!br.ready()) return null;
-        this.tagJson=gson.fromJson(br, TagJson.class);
+        this.tagJson = gson.fromJson(br, TagJson.class);
         return tagJson;
     }
 }

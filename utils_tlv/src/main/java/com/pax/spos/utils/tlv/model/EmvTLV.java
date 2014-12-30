@@ -2,7 +2,6 @@ package com.pax.spos.utils.tlv.model;
 
 import com.pax.spos.utils.ByteStringHex;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ public class EmvTLV {
     private int length;
     private byte[] value;
     private String dataType;
-     private int fatherTag;
+    private int fatherTag;
     private List<EmvTLV> subTLVs;
 
     public EmvTLV() {
@@ -45,6 +44,7 @@ public class EmvTLV {
             this.value = ByteStringHex.hexStr2Bytes(valueHexStr);
         }
     }
+
     @Override
     public String toString() {
         return "EmvTLV{" +
@@ -57,7 +57,7 @@ public class EmvTLV {
                 ", fatherTag_Hex=" + Integer.toHexString(fatherTag).toUpperCase() + '\'' +
                 ", fatherTag=" + fatherTag +
                 ", subTLVs=" + subTLVs +
-                '}'+ '\'' ;
+                '}' + '\'';
     }
 
     public int getFatherTag() {

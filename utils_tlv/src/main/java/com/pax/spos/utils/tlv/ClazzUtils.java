@@ -35,11 +35,11 @@ public class ClazzUtils {
     public static TagJson getTagJson() {
         try {
 //            InputStream in = getResources().getAssets().open(fileName);
-            TagJson tagJson=null;
-            if (tagjsonInputStream ==null){
-                tagJson=TagJsonUtils.getInstance().parseJson("tag.json");
-            }else {
-                tagJson=TagJsonUtils.getInstance().parseJson(tagjsonInputStream);
+            TagJson tagJson = null;
+            if (tagjsonInputStream == null) {
+                tagJson = TagJsonUtils.getInstance().parseJson("tag.json");
+            } else {
+                tagJson = TagJsonUtils.getInstance().parseJson(tagjsonInputStream);
             }
             return tagJson;
         } catch (IOException e) {
@@ -54,18 +54,24 @@ public class ClazzUtils {
         posFunc = 0;
         posPara = 0;
         byte[] byteTag = ByteStringHex.int2Bytes(tag);
-        String clazz=justClazz(byteTag[0]);
+        String clazz = justClazz(byteTag[0]);
 //        tlv.setClazz(justClazz(byteTag[0]));
-        if (clazz==null){return tlv;}
+        if (clazz == null) {
+            return tlv;
+        }
         tlv.setClazz(clazz);
         //byteTag[1] 八位 processo
 
-        String func=justFunc(byteTag[1]);
-        if (func==null){return tlv;}
+        String func = justFunc(byteTag[1]);
+        if (func == null) {
+            return tlv;
+        }
         tlv.setFunc(func);
 
-        String para=justPara(byteTag[2]);
-        if (para==null){return tlv;}
+        String para = justPara(byteTag[2]);
+        if (para == null) {
+            return tlv;
+        }
         tlv.setPara(para);
         //byteTag[2] 八位 process
         // sposTLV.setPara(justPara(byteTag[2]));
@@ -83,10 +89,16 @@ public class ClazzUtils {
         byte clazz4bit = (byte) ((bit8 & 0x0F));
         String str = ByteStringHex.lo4Bit2HexStr(clazz4bit);
 //        System.out.println("justClazz clazz4Bit="+str);
-        TagJson tagJson=getTagJson();
-        if (tagJson==null){return null;}
+        TagJson tagJson = getTagJson();
+        if (tagJson == null) {
+            return null;
+        }
         ArrayList<TagJsonClazz> tagJsonClazzs = tagJson.getClazzs();
-        if (tagJsonClazzs == null||tagJsonClazzs.size()<1) {posClazz=-1;return null;};
+        if (tagJsonClazzs == null || tagJsonClazzs.size() < 1) {
+            posClazz = -1;
+            return null;
+        }
+        ;
         int len = tagJsonClazzs.size();
         if (len == 0) return null;
         TagJsonClazz clazz;
@@ -117,16 +129,23 @@ public class ClazzUtils {
 //        }
 //        System.out.println("justFunc pos"+posClazz);
         String str = ByteStringHex.byte2HexStr(bit8);
-        TagJson tagJson=getTagJson();
-        if (tagJson==null){return null;}
+        TagJson tagJson = getTagJson();
+        if (tagJson == null) {
+            return null;
+        }
         ArrayList<TagJsonClazz> tagJsonClazzs = tagJson.getClazzs();
-        if (tagJsonClazzs==null|| tagJsonClazzs.size()<1){return null;}
-        if (posClazz==-1){
+        if (tagJsonClazzs == null || tagJsonClazzs.size() < 1) {
+            return null;
+        }
+        if (posClazz == -1) {
             return null;
         }
 //        System.out.println("----posClazz"+posClazz);
         ArrayList<TagJsonFunc> tagJsonFuncs = tagJson.getClazzs().get(posClazz).getFuncs();
-        if (tagJsonFuncs == null||tagJsonFuncs.size()<1) {posFunc=-1;return null;}
+        if (tagJsonFuncs == null || tagJsonFuncs.size() < 1) {
+            posFunc = -1;
+            return null;
+        }
 //        System.out.println("justFunc="+tagJsonFuncs);
         int len = tagJsonFuncs.size();
         if (len == 0) return null;
@@ -161,10 +180,15 @@ public class ClazzUtils {
     private static String justPara(byte bit8) {
         //byteTag[2] 八位 process
         String str = ByteStringHex.byte2HexStr(bit8);
-        TagJson tagJson=getTagJson();
-        if (tagJson==null||tagJson.getClazzs().get(posClazz).getFuncs()==null){return null;}
+        TagJson tagJson = getTagJson();
+        if (tagJson == null || tagJson.getClazzs().get(posClazz).getFuncs() == null) {
+            return null;
+        }
         ArrayList<TagJsonPara> tagJsonParas = tagJson.getClazzs().get(posClazz).getFuncs().get(posFunc).getParas();
-        if (tagJsonParas == null) {posPara=-1;return null;}
+        if (tagJsonParas == null) {
+            posPara = -1;
+            return null;
+        }
         int len = tagJsonParas.size();
         if (len == 0) return null;
         TagJsonPara para;

@@ -298,9 +298,9 @@ public class HttpClientUtil {
         if (httpBytes==null || httpBytes.getReqUrl().length()<10){
             return null;
         }
-        if (httpBytes.getSslKey()==null ||httpBytes.getSslKey().length()<128){
-            return null;
-        }
+//        if (httpBytes.getSslKey()==null ||httpBytes.getSslKey().length()<128){
+//            return null;
+//        }
 
         KeyStore trustStore  = KeyStore.getInstance(KeyStore.getDefaultType());
         FileInputStream instream = new FileInputStream(httpBytes.getSslKey());

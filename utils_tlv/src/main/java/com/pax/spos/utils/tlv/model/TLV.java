@@ -188,8 +188,8 @@ public class TLV {
     public String toString() {
         return "SposTLV{" +
                 "isArray=" + isArray +
-                ", isConstructed=" + isConstructed +
                 ", tag_Hex=" + Integer.toHexString(tag).toUpperCase() + '\'' +
+                ", isConstructed=" + isConstructed +
                 ", tag=" + tag +
                 ", length=" + length +
                 ", value=" + ByteStringHex.bytes2HexStr(value) +

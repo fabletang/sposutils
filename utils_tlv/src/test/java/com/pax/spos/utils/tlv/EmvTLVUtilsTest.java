@@ -32,7 +32,7 @@ public class EmvTLVUtilsTest {
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
 //        List<EmvTLV> res=EmvTLVUtils.bytes2TopNestedTLVs(test);
         List<EmvTLV> res = EmvTLVUtils.bytes2NestedFlatTLVs(test);
-//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2TLVs(test);
         assertEquals(4, res.size());
         List<EmvTLV> tlvs = EmvTLVUtils.findByTag(0xE1010203, res);
         assertEquals(8, tlvs.get(0).getLength());
@@ -55,7 +55,7 @@ public class EmvTLVUtilsTest {
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
 //        List<EmvTLV> res=EmvTLVUtils.bytes2TopNestedTLVs(test);
         List<EmvTLV> res = EmvTLVUtils.bytes2NestedFlatTLVs(test);
-//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2TLVs(test);
         assertEquals(5, res.size());
 
     }
@@ -94,8 +94,8 @@ public class EmvTLVUtilsTest {
         String hexStr = "21110203010105230A14030277761503020122";
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
         List<EmvTLV> res = EmvTLVUtils.bytes2TopNestedTLVs(test);
-//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
-//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2TLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2TLVs(test);
         System.out.println("testBytes2TopNestedTLVs res="+res);
         assertEquals(1, res.size());
         String res0 = ByteStringHex.bytes2HexStr(EmvTLVUtils.TLV2Bytes(res.get(0)));
@@ -107,8 +107,8 @@ public class EmvTLVUtilsTest {
          test = ByteStringHex.hexStr2Bytes(hexStr);
         System.out.println("testBytes2TopNestedTLVs hexStr="+hexStr);
         res = EmvTLVUtils.bytes2TopNestedTLVs(test);
-//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
-//        List<EmvTLV> res=EmvTLVUtils.bytes2FlatTLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2TLVs(test);
+//        List<EmvTLV> res=EmvTLVUtils.bytes2TLVs(test);
         assertEquals(7, res.size());
         System.out.println("testBytes2TopNestedTLVs res="+res);
         System.out.println("testBytes2TopNestedTLVs res.siez="+res.size());
@@ -123,7 +123,7 @@ public class EmvTLVUtilsTest {
         assertEquals(0x9F37, finds.get(0).getTag());
     }
 
-//    @Test
+    @Test
     public void testTLV2Bytes() throws Exception {
 //        String  "E101000015C101010303010105E101020310C101020303027776";
         String hexStr = "01";
@@ -189,7 +189,39 @@ public class EmvTLVUtilsTest {
         assertEquals((byte) (0x01), res[5]);
     }
 
-//    @Test
+    @Test
+    public void testTLVs2Bytes2() throws Exception {
+        //ff28
+        //9f5a
+        //9f5b
+        EmvTLV oldMerchantId = new EmvTLV(0X9F5A, "102980058140002".getBytes());
+        EmvTLV payNewPosSer = new EmvTLV(0X9F5B,  "012222233333".getBytes());
+        System.out.println("testTLVs2Bytes oldMerchantId="+oldMerchantId);
+        List<EmvTLV> lists=new ArrayList<EmvTLV>();
+        lists.add(oldMerchantId);
+        lists.add(payNewPosSer);
+        //byte[] res = EmvTLVUtils.TLV2Bytes(tlv);
+        //tlv对象转 bytes 也是 List<EmvTLV>
+        byte[] res = EmvTLVUtils.TLVs2Bytes(lists);
+       
+        assert(res!=null);
+        assertEquals((byte) (0x0F), res[2]);
+         System.out.println("===========01 testTLVs2Bytes2 res="+ByteStringHex.bytes2HexStr(res));
+         // 查找用使用 bytes2FlatTLVS
+        List<EmvTLV> tlvs = EmvTLVUtils.bytes2FlatTLVs(res);
+         System.out.println("===========02 tlvs.size()="+tlvs.size());
+         System.out.println("===========03 tlvs="+tlvs);
+        //findBytag 返回的是list
+        //bytes2TLVs
+        List<EmvTLV> oldMerchantIds=EmvTLVUtils.findByTag(0X9F5A,tlvs); 
+        System.out.println("testTLVs2Bytes2 oldMerchantId="+oldMerchantIds.get(0));
+        assertEquals((byte) (0x0F), oldMerchantIds.get(0).getLength());
+        List<EmvTLV> payNewPosSers=EmvTLVUtils.findByTag(0X9F5B,tlvs); 
+        System.out.println("testTLVs2Bytes2 payNewPosSer="+payNewPosSers.get(0));
+        assertEquals((byte) (0x0C), payNewPosSers.get(0).getLength());
+        //List<EmvTLV> res57=EmvTLVUtils.findByTag(0x57,res);
+    }
+    //@Test
     public void testTLVs2Bytes() throws Exception {
 
 //        String  "E101000015C101010303010105E101020310C101020303027776";
@@ -200,7 +232,11 @@ public class EmvTLVUtilsTest {
         tlv.setTag(tag);
         tlv.setValue(value);
 //        System.out.println("testTLV2Bytes tlv="+tlv);
-        byte[] res = EmvTLVUtils.TLV2Bytes(tlv);
+        System.out.println("testTLVs2Bytes tlv="+tlv);
+        List<EmvTLV> lists=new ArrayList<EmvTLV>();
+        lists.add(tlv);
+        //byte[] res = EmvTLVUtils.TLV2Bytes(tlv);
+        byte[] res = EmvTLVUtils.TLVs2Bytes(lists);
         assertEquals(8, res.length);
 //        System.out.println("=="+Byte.parseByte("C",16));
         assertEquals((byte) (0xC1), res[0]);

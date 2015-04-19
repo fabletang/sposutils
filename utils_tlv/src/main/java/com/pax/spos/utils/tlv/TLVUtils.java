@@ -282,7 +282,7 @@ public class TLVUtils {
     }
 
     private static List<TLV> bytes2FlatTLVs(byte[] bytes) {
-//        ////System.out.println("bytes2FlatTLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
+//        ////System.out.println("bytes2TLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
         if (bytes == null || bytes.length < 4) {
             //if (bytes == null || bytes.length < 5) {
             return null;
@@ -299,7 +299,7 @@ public class TLVUtils {
 //                 dest.addAll(parseBytes(flatTLVs.get(i).getValue(), flatTLVs, flatTLVs.get(i).getTag(), pos));
 //                }
 //            }
-//        ////System.out.println("bytes2FlatTLVs flatTLVS="+flatTLVs.get(0));
+//        ////System.out.println("bytes2TLVs flatTLVS="+flatTLVs.get(0));
 //        return flatTLVs;
         return dest;
     }

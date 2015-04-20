@@ -430,7 +430,7 @@ public class EmvTLVUtils {
     }
 
     public static List<EmvTLV> bytes2FlatTLVs(byte[] bytes) {
-//        System.out.println("bytes2FlatTLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
+//        System.out.println("bytes2TLVs bytes="+ByteStringHex.bytes2HexStr(bytes));
         if (bytes == null || bytes.length < 2) {
             return null;
         }
@@ -438,7 +438,7 @@ public class EmvTLVUtils {
         List<EmvTLV> flatTLVs = new ArrayList<EmvTLV>();
         int fatherTag = 0, pos = 0;
         flatTLVs = (parseBytes(bytes, flatTLVs, fatherTag, pos));
-//        System.out.println("bytes2FlatTLVs flatTLVS="+flatTLVs.get(0));
+//        System.out.println("bytes2TLVs flatTLVS="+flatTLVs.get(0));
         return flatTLVs;
     }
 
@@ -599,6 +599,7 @@ public class EmvTLVUtils {
     }
 
     public static byte[] TLV2Bytes(EmvTLV nestedTLV) {
+        if (nestedTLV==null) return null;
         List<EmvTLV> flatTLVs = new ArrayList<EmvTLV>();
         flatTLVs = TLV2FlatTLVs(nestedTLV);
 //        System.out.println("--TLV2Bytes flatTLVs size=" + flatTLVs.size());

@@ -56,7 +56,7 @@ public class TLVUtilsTest {
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
 //        List<TLV> res=TLVUtils.bytes2TopNestedTLVs(test);
         List<TLV> res = TLVUtils.bytes2NestedFlatTLVs(test);
-//        List<TLV> res=TLVUtils.bytes2FlatTLVs(test);
+//        List<TLV> res=TLVUtils.bytes2TLVs(test);
         assertEquals(4, res.size());
         List<TLV> tlvs = TLVUtils.findByTag(0xE1010203, res);
         assertEquals(8, tlvs.get(0).getLength());
@@ -81,7 +81,7 @@ public class TLVUtilsTest {
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
 //        List<TLV> res=TLVUtils.bytes2TopNestedTLVs(test);
         List<TLV> res = TLVUtils.bytes2NestedFlatTLVs(test);
-//        List<TLV> res=TLVUtils.bytes2FlatTLVs(test);
+//        List<TLV> res=TLVUtils.bytes2TLVs(test);
         System.out.println("res="+res);
         assertEquals(6, res.size());
 
@@ -125,8 +125,8 @@ public class TLVUtilsTest {
         String hexStr = "E10100001DC101010303010105E101020310C101020303027776C101030303020122";
         byte[] test = ByteStringHex.hexStr2Bytes(hexStr);
         List<TLV> res = TLVUtils.bytes2TopNestedTLVs(test);
-//        List<TLV> res=TLVUtils.bytes2FlatTLVs(test);
-//        List<TLV> res=TLVUtils.bytes2FlatTLVs(test);
+//        List<TLV> res=TLVUtils.bytes2TLVs(test);
+//        List<TLV> res=TLVUtils.bytes2TLVs(test);
         assertEquals(1, res.size());
         String res0 = ByteStringHex.bytes2HexStr(TLVUtils.TLV2Bytes(res.get(0)));
         assertEquals(hexStr, res0);

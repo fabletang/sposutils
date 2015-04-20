@@ -6,52 +6,57 @@ group = "com.pax.spos"
 /*artifactId ='D800_SDK'*/
 //name = "utils_tlv"
 version = "2.0.1"
-/*buildscript{*/
-/*repositories {*/
-    /*mavenLocal()*/
-    /*maven {url "http://www.paxsh.com:10092/nexus/content/groups/public/"}*/
-    /*mavenCentral()*/
-    /*}*/
-/*dependencies {*/
-    /*//classpath 'net.sf.proguard:proguard-gradle:4.11'*/
-    /*//classpath 'net.sf.proguard:proguard-gradle:5.1'*/
-    /*classpath group: 'net.sf.proguard', name: 'proguard-gradle', version: '5.1'*/
-/*}*/
-/*}*/
 
+/*task proguard(type: proguard.gradle.ProGuardTask,dependsOn:jar) {*/
+    /*//printmapping 'proguard.map'*/
+        /*overloadaggressively*/
+        /*//repackageclasses ''*/
+        /*allowaccessmodification*/
+        /*injars  "build/libs/${project.name}-${version}.jar"*/
+        /*outjars  "build/libs/${project.name}-${version}-proguard.jar"*/
+        /*configuration 'proguard.pro'*/
+        /*//keep 'public class com.pax.* {public *; }'*/
+/*}*/
 task proguard(type: proguard.gradle.ProGuardTask,dependsOn:jar) {
-    //printmapping 'proguard.map'
-    overloadaggressively
-    //repackageclasses ''
-    allowaccessmodification
-    injars  "build/libs/${project.name}-${version}.jar"
-    outjars  "build/libs/${project.name}-${version}-proguard.jar"
-    configuration 'proguard.pro'
-    //keep 'public class com.pax.* {public *; }'
+        /*dontoptimize*/
+        dontwarn
+        dontoptimize
+        /*optimizationpasses 6  */
+        overloadaggressively
+        //repackageclasses ''
+        allowaccessmodification
+        keepattributes '*Annotation*,EnclosingMethod'
+        keep 'public class ** {public *; }'
+        /*keep 'class **.model.** {public *;}'*/
+        /*keepclassmembers 'class **.model.** {public *;}'*/
+        injars  "build/libs/${project.name}-${version}.jar"
+        outjars  "build/libs/${project.name}-${version}-proguard.jar"
+        /*configuration 'proguard.pro'*/
+        //keep 'public class com.pax.* {public *; }'
 }
 
 task proguardJar(type: Delete,dependsOn: proguard) {
-  delete "build/libs/${project.name}-${version}.jar"
-  doLast {
-    file("build/libs/${project.name}-${version}-proguard.jar").renameTo("build/libs/${project.name}-${version}.jar")
-   }
+    delete "build/libs/${project.name}-${version}.jar"
+        doLast {
+            file("build/libs/${project.name}-${version}-proguard.jar").renameTo("build/libs/${project.name}-${version}.jar")
+        }
 }
 
 /*repositories {*/
-    /*mavenLocal()*/
-    /*maven {url "http://www.paxsh.com:10092/nexus/content/groups/public/"}*/
-    /*mavenCentral()*/
-    /*}*/
+/*mavenLocal()*/
+/*maven {url "http://www.paxsh.com:10092/nexus/content/groups/public/"}*/
+/*mavenCentral()*/
+/*}*/
 dependencies {
     //compile fileTree(dir: 'libs', include: '*.jar') 
     /*compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'*/
     compile ('com.google.code.gson:gson:2.2.4')
-    compile ('com.pax.d800:utils_comm:+')
-    /*testCompile group: 'junit', name: 'junit', version: '4.11'*/
-    testCompile('junit:junit:4.11')
-    /*compile(*/
-         /*project(':utils_comm')*/
-    /*)*/
+        compile ('com.pax.d800:utils_comm:+')
+        /*testCompile group: 'junit', name: 'junit', version: '4.11'*/
+        testCompile('junit:junit:4.11')
+        /*compile(*/
+        /*project(':utils_comm')*/
+        /*)*/
 }
 jar {
     manifest {
@@ -66,26 +71,26 @@ compileJava.dependsOn 'copyConf'
 //tasks.withType(upload) { uploadTask -> uploadTask.dependsOn proguard }
 
 /*task uploadArchives(type: Upload) {*/
-			/*dependsOn delOriginJar*/
-		/*}*/
+/*dependsOn delOriginJar*/
+/*}*/
 uploadArchives {
-        dependsOn proguardJar
+    dependsOn proguardJar
         repositories {
-//if (version.endsWith("-proguard")) { }
+            //if (version.endsWith("-proguard")) { }
             mavenDeployer {
                 pom.groupId = "com.pax.d800"
-                pom.version = version+"-SNAPSHOT"
-                //pom.version = "1.0.2"
-                snapshotRepository(url: "http://www.paxsh.com:10092/nexus/content/repositories/snapshots/") {
-                /*pom.version = version*/
-                /*Repository(url: "http://www.paxsh.com:10092/nexus/content/repositories/releases/") {*/
-                    authentication(userName: "paxdeploy", password: "paxsh")
-                //uniqueVersion=false
-                }
-            repository(url: "http://192.168.8.9:10092/nexus/content/repositories/releases/") {
-                authentication(userName: "paxdeploy", password: "paxsh")
-            }  
-        //addFilter('proguardJar') { file -> file.name == "build/libs/${project.name}-${version}-proguard.jar" }
+                    /*pom.version = version+"-SNAPSHOT"*/
+                    snapshotRepository(url: "http://www.paxsh.com:10092/nexus/content/repositories/snapshots/") {
+                        /*pom.version = version*/
+                        /*Repository(url: "http://www.paxsh.com:10092/nexus/content/repositories/releases/") {*/
+                        authentication(userName: "paxdeploy", password: "paxsh")
+                            //uniqueVersion=false
+                    }
+                    pom.version = version
+                        repository(url: "http://www.paxsh.com:10092/nexus/content/repositories/releases/") {
+                            authentication(userName: "paxdeploy", password: "paxsh")
+                        }  
+                    //addFilter('proguardJar') { file -> file.name == "build/libs/${project.name}-${version}-proguard.jar" }
+                    }
             }
-            }
-    }
+        }

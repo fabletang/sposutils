@@ -41,6 +41,10 @@ task copyLibs << {
     }
     }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
 /*uploadArchives.dependsOn 'copyLibs'*/
 /*upload.dependsOn 'copyLibs'*/
 /*uploadArchives { }*/

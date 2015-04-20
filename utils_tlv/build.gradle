@@ -75,6 +75,9 @@ uploadArchives {
                     authentication(userName: "paxdeploy", password: "paxsh")
                 //uniqueVersion=false
                 }
+            repository(url: "http://192.168.8.9:10092/nexus/content/repositories/releases/") {
+                authentication(userName: "paxdeploy", password: "paxsh")
+            }  
         //addFilter('proguardJar') { file -> file.name == "build/libs/${project.name}-${version}-proguard.jar" }
             }
             }
